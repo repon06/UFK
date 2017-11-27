@@ -9,41 +9,57 @@ namespace ufk.Helper
 {
     class PaymentFKValues
     {
-        public string fk { get; set; }
+        private string fk { get; set; }
         public Dictionary<string, string> FK { set; get; }
-        public string bd { get; set; }
+        private string bd { get; set; }
         public Dictionary<string, string> BD { set; get; }
-        public List<Payment> payments { get; set; }
-        public List<Dictionary<string, string>> PAUMENTS { set; get; }
+        private List<Payment> payments { get; set; }
+        //private Dictionary<string, string> PAUMENTS_DIC { set; get; }//в один дикт вносим/парсим bdpd и bdpdst
+        public List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+
+        public PaymentFKValues()
+        { }
 
         public PaymentFKValues(string fileContent)
         {
-            var fk_regex_pt = new Regex(@"FK\|.*\n");
-            var bd_regex_pt = new Regex(@"BD\|.*\n");
-            var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
 
-            var fk_match = fk_regex_pt.Match(fileContent);
-            var bd_match = bd_regex_pt.Match(fileContent);
-            var payment_matches = payments_regex_pt.Matches(fileContent);
+       
+                var fk_regex_pt = new Regex(@"FK\|.*\n");
+                var bd_regex_pt = new Regex(@"BD\|.*\n");
+                var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
 
-            fk = fk_match.Value;
-            bd = bd_match.Value;
-            var payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value).ToList();//выборка по 2 строки одного платежа
-            payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym)).ToList();
+                var fk_match = fk_regex_pt.Match(fileContent);
+                var bd_match = bd_regex_pt.Match(fileContent);
+                var payment_matches = payments_regex_pt.Matches(fileContent);
 
-            FK = new FkPaymentHelper().ParsePayment(fk, PaymentType.fk);
-            BD = new FkPaymentHelper().ParsePayment(bd, PaymentType.bd);
-            PAUMENTS = null;
+                fk = fk_match.Value;
+                bd = bd_match.Value;
+                var payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value).ToList();//выборка по 2 строки одного платежа
+                payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym)).ToList();
 
-            var bdpd0 = new FkPaymentHelper().ParsePayment(payments[0].bdpd, PaymentType.bdpd);
-            var bdpdst0 = new FkPaymentHelper().ParsePayment(payments[0].bdpdst, PaymentType.bdpdst);
+                var paymentHelper = new PaymentHelper();
 
-            /* можно так
-            payment = new List<Payment>();
+                FK = paymentHelper.ParsePayment(fk, PaymentType.fk);
+                BD = paymentHelper.ParsePayment(bd, PaymentType.bd);
 
-            foreach (string paym in payment_)
-                payment.Add(new Payment(paym));
-            */
+                foreach (Payment key_val in payments)
+                {
+                    Dictionary<string, string> bdpd = paymentHelper.ParsePayment(key_val.bdpd, PaymentType.bdpd);
+                    Dictionary<string, string> bdpdst = paymentHelper.ParsePayment(key_val.bdpdst, PaymentType.bdpdst);
+                    Dictionary<string, string> paym_dic = bdpd.Union(bdpdst).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);//объединяем
+
+                    PAUMENTS.Add(paym_dic);
+                }
+
+
+                /* можно так
+                payment = new List<Payment>();
+
+                foreach (string paym in payment_)
+                    payment.Add(new Payment(paym));
+                */
+            
+
         }
 
 

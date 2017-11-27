@@ -11,6 +11,183 @@ namespace ufk.Helper
     class PaymentExcelWriter
     {
 
+        public static void SaveXls(string filename, PaymentFKValues PAUMENTS)
+        {
+            var filenameArenda = $"{Path.GetDirectoryName(filename)}\\{Path.GetFileNameWithoutExtension(filename)}_arenda.xls";// filename.Trim().ToLower().Substring(0, filename.IndexOf(".")) + "kalad.xls";
+            var filenameBuhg = $"{Path.GetDirectoryName(filename)}\\{Path.GetFileNameWithoutExtension(filename)}_buhg.xls";// filename.Trim().ToLower().Substring(0, filename.IndexOf(".")) + "gamayn.xls";
+
+            try
+            {
+                FileStream streamAr = new FileStream(filenameArenda, FileMode.OpenOrCreate);
+                ExcelWriter writerAr = new ExcelWriter(streamAr);
+                writerAr.BeginWrite();
+
+                FileStream streamBu = new FileStream(filenameBuhg, FileMode.OpenOrCreate);
+                ExcelWriter writerBu = new ExcelWriter(streamBu);
+                writerBu.BeginWrite();
+
+                int ii = 0;
+
+                writerAr.WriteCell(ii, 0, "Номер документа");
+                writerAr.WriteCell(ii, 1, "Дата документа");
+                writerAr.WriteCell(ii, 2, "Сумма документа");
+                writerAr.WriteCell(ii, 3, "ИНН плательщика");
+                writerAr.WriteCell(ii, 4, "КПП плательщика");
+                writerAr.WriteCell(ii, 5, "ИНН получателя");
+                writerAr.WriteCell(ii, 6, "КПП получателя");
+                writerAr.WriteCell(ii, 7, "Код бюджетной классификации");
+                writerAr.WriteCell(ii, 8, "Вид платежа");
+                writerAr.WriteCell(ii, 9, "Поступило в банк плательщика");
+                writerAr.WriteCell(ii, 10, "Дата списания со счета плательщика");
+                writerAr.WriteCell(ii, 11, "Вид операции");
+                writerAr.WriteCell(ii, 12, "Наименование плательщика");
+                writerAr.WriteCell(ii, 13, "Расчетный счет плательщика");
+                writerAr.WriteCell(ii, 14, "БИК банка плательщика");
+                writerAr.WriteCell(ii, 15, "Наименование банка плательщика");
+                writerAr.WriteCell(ii, 16, "Коррсчет банка плательщика");
+                writerAr.WriteCell(ii, 17, "Наименование получателя");
+                writerAr.WriteCell(ii, 18, "Расчетный счет получателя");
+                writerAr.WriteCell(ii, 19, "БИК банка получателя");
+                writerAr.WriteCell(ii, 20, "Наименование банка получателя");
+                writerAr.WriteCell(ii, 21, "Коррсчет банка получателя");
+                writerAr.WriteCell(ii, 22, "Очередность платежа");
+                writerAr.WriteCell(ii, 23, "Статус составителя расчетного документа");
+                writerAr.WriteCell(ii, 24, "Назначение платежа");
+                writerAr.WriteCell(ii, 25, "Показатель основания платежа");
+                writerAr.WriteCell(ii, 26, "Код ОКАТО");
+                writerAr.WriteCell(ii, 27, "Показатель налогового периода");
+                writerAr.WriteCell(ii, 28, "Показатель номера документа");
+                writerAr.WriteCell(ii, 29, "Показатель даты документа");
+                writerAr.WriteCell(ii, 30, "Тип платежа");
+                writerAr.WriteCell(ii, 31, "Номер частичного платежа");
+                writerAr.WriteCell(ii, 32, "Номер платежного документа");
+                writerAr.WriteCell(ii, 33, "Дата платежного документа");
+                writerAr.WriteCell(ii, 34, "Содержание операции");
+                writerAr.WriteCell(ii, 35, "Глобальный идентификатор");
+                writerAr.WriteCell(ii, 36, "Срок платежа");
+
+
+                writerBu.WriteCell(ii, 0, "Номер документа");
+                writerBu.WriteCell(ii, 1, "Дата документа");
+                writerBu.WriteCell(ii, 2, "Сумма документа");
+                writerBu.WriteCell(ii, 3, "ИНН плательщика");
+                writerBu.WriteCell(ii, 4, "КПП плательщика");
+                writerBu.WriteCell(ii, 5, "ИНН получателя");
+                writerBu.WriteCell(ii, 6, "КПП получателя");
+                writerBu.WriteCell(ii, 7, "Дата списания со счета плательщика");
+                writerBu.WriteCell(ii, 8, "Наименование плательщика");
+                writerBu.WriteCell(ii, 9, "Назначение платежа");
+                writerBu.WriteCell(ii, 10, "Код бюджетной классификации");
+                writerBu.WriteCell(ii, 11, "Срок платежа");
+
+                int i_ar = ii;
+                int i_bu = ii;
+
+                // for (int i = na4alo_dannih; i < Zn.GetLength(0); i++)
+                foreach (var paym in PAUMENTS.PAUMENTS)
+                {
+                    if (StringHelper.kbk_arenda.Contains(paym["KBK"])) // содержит кбк отдела аренды (Калядин)
+                    {
+                        //Console.WriteLine($"KBK платежки ({paym["KBK"]}) = КБК отдела аренды!");
+                        i_ar++;
+                        try
+                        {
+                            writerAr.WriteCell(i_ar, 00, paym["NUM_PP"]);
+                            writerAr.WriteCell(i_ar, 01, paym["DATE_PP"]);
+                            writerAr.WriteCell(i_ar, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
+                            writerAr.WriteCell(i_ar, 03, paym["INN_PAY"]);
+                            writerAr.WriteCell(i_ar, 04, paym["KPP_PAY"]);
+                            writerAr.WriteCell(i_ar, 05, paym["INN_RCP"]);
+                            writerAr.WriteCell(i_ar, 06, paym["KPP_RCP"]);
+                            writerAr.WriteCell(i_ar, 07, paym["KBK"]);
+                            writerAr.WriteCell(i_ar, 08, paym["VID_PL"]);
+                            writerAr.WriteCell(i_ar, 09, paym["DATE_PP_IN"]);
+                            writerAr.WriteCell(i_ar, 10, paym["DATE_PP_SPS"]);
+                            writerAr.WriteCell(i_ar, 11, paym["VID_OPER"]);
+                            writerAr.WriteCell(i_ar, 12, paym["CNAME_PAY"]);
+                            writerAr.WriteCell(i_ar, 13, paym["BS_PAY"]);
+                            writerAr.WriteCell(i_ar, 14, paym["BIC_PAY"]);
+                            writerAr.WriteCell(i_ar, 15, paym["NAME_BIC_PAY"]);
+                            writerAr.WriteCell(i_ar, 16, paym["BS_KS_PAY"]);
+                            writerAr.WriteCell(i_ar, 17, paym["СNAME_UBP_RCP"]);
+                            writerAr.WriteCell(i_ar, 18, paym["BS_RCP"]);
+                            writerAr.WriteCell(i_ar, 19, paym["BIC_RCP"]);
+                            writerAr.WriteCell(i_ar, 20, paym["NAME_BIC_RCP"]);
+                            writerAr.WriteCell(i_ar, 21, paym["BS_KS_RCP"]);
+                            writerAr.WriteCell(i_ar, 22, paym["ORDER_PAY"]);
+                            writerAr.WriteCell(i_ar, 23, paym["PAYSTATUS"]);
+                            writerAr.WriteCell(i_ar, 24, paym["PURPOSE"]);
+                            writerAr.WriteCell(i_ar, 25, paym["OSNPLAT"]);
+                            writerAr.WriteCell(i_ar, 26, paym["OKATO"]);
+                            writerAr.WriteCell(i_ar, 27, paym["NAL_PER"]);
+                            writerAr.WriteCell(i_ar, 28, paym["NUM_DOK"]);
+                            writerAr.WriteCell(i_ar, 29, paym["DATE_DOK"]);
+                            writerAr.WriteCell(i_ar, 30, paym["TYPE_PL"]);
+                            writerAr.WriteCell(i_ar, 31, paym["NOM_PL_PO"]);
+                            writerAr.WriteCell(i_ar, 32, paym["NOM_RD_PO"]);
+                            writerAr.WriteCell(i_ar, 33, paym["DATE_RD_PO"]);
+                            writerAr.WriteCell(i_ar, 34, paym["OPER_PO"]);
+                            writerAr.WriteCell(i_ar, 35, paym["GUID"]);
+                            writerAr.WriteCell(i_ar, 35, paym["DATE_PAY"]);
+                        }
+                        catch (Exception exc)
+                        {
+                            MessageBox.Show("Ошбика в строке " + paym["NUM_PP"] + "\r\n" + exc.Message + "\r\n" + exc.Source, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        // Console.WriteLine($"KBK платежки ({paym["KBK"]}) не = КБК отдела аренды!");
+                        i_bu++;
+                        try
+                        {
+                            writerBu.WriteCell(i_bu, 00, paym["NUM_PP"]);
+                            writerBu.WriteCell(i_bu, 01, paym["DATE_PP"]);
+                            writerBu.WriteCell(i_bu, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
+                            writerBu.WriteCell(i_bu, 03, paym["INN_PAY"]);
+                            writerBu.WriteCell(i_bu, 04, paym["KPP_PAY"]);
+                            writerBu.WriteCell(i_bu, 05, paym["INN_RCP"]);
+                            writerBu.WriteCell(i_bu, 06, paym["KPP_RCP"]);
+                            writerBu.WriteCell(i_bu, 07, paym["DATE_PP_SPS"]);
+                            writerBu.WriteCell(i_bu, 08, paym["CNAME_PAY"]);
+                            writerBu.WriteCell(i_bu, 09, paym["PURPOSE"]);
+                            writerBu.WriteCell(i_bu, 10, paym["KBK"]);
+                            writerBu.WriteCell(i_bu, 11, paym["DATE_PAY"]);
+                        }
+                        catch (Exception exc)
+                        {
+                            MessageBox.Show("Ошбика в строке " + paym["NUM_PP"] + "\r\n" + exc.Message + "\r\n" + exc.Source, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+
+                } //foreach
+
+                writerAr.EndWrite();
+                streamAr.Close();
+
+                writerBu.EndWrite();
+                streamBu.Close();
+
+                //ПЕРЕСОХРАНЯЕМ!            
+                Excel xlstmp = new Excel();
+                xlstmp.OpenDocument(filenameArenda);
+                xlstmp.SaveDocument(filenameArenda);
+                xlstmp.CloseDocument();
+
+                xlstmp = new Excel();
+                xlstmp.OpenDocument(filenameBuhg);
+                xlstmp.SaveDocument(filenameBuhg);
+                xlstmp.CloseDocument();
+
+                MessageBox.Show($"Записей в файле: {PAUMENTS.PAUMENTS.Count}\r\n" + i_ar + " сконвертированы по КБК аренды\r\n" + i_bu + " сконвертированы по иным КБК", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception strStream)
+            {
+                MessageBox.Show("Что-то с файлом/ами " + filename + "\r\n" + strStream.Message + "\r\n" + strStream.Source, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /*
         /// <summary>
         /// Калядину выгрузки Платежные поручения
         /// 
@@ -24,7 +201,7 @@ namespace ufk.Helper
         /// <param name="Zn"></param>
         /// na4alo_dannih - c с какой строки начинать искать данные - т.е. скока пропустить -служ инф
         /// exp - расширение
-        public static void SaveXlsKalad(string filename, string[,] Zn, int na4alo_dannih, string exp)
+        public static void SaveXlsKalad_(string filename, string[,] Zn, int na4alo_dannih, string exp)
         {
             Console.WriteLine("saveXls");
 
@@ -202,7 +379,7 @@ namespace ufk.Helper
                 MessageBox.Show("Что-то с файлом " + filename + "\r\n" + strStream.Message + "\r\n" + strStream.Source, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        */
 
         /// <summary>
         /// Гамаюновой выгрузки Платежные поручения
@@ -253,7 +430,7 @@ namespace ufk.Helper
                     /* убрал и заменил 24,08,2015            	if (i%2==0 && ( StringHelper.GetNotNull(Zn[i,26])!="04611105012040000120" && StringHelper.GetNotNull(Zn[i,26])!="04611105024040000120" && StringHelper.GetNotNull(Zn[i,26])!="04611406012040000430" && StringHelper.GetNotNull(Zn[i,26])!="04611406024040000430"
 
                                                   ))//если четные */
-                    if (i % 2 == 0 && !StringHelper.kbk_kaladyn.Contains(StringHelper.GetNotNull(Zn[i, 26])))
+                    if (i % 2 == 0 && !StringHelper.kbk_arenda.Contains(StringHelper.GetNotNull(Zn[i, 26])))
                     {
                         try
                         {

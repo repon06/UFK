@@ -11,14 +11,26 @@ using ufk.Helper;
 
 namespace ufk
 {
-    /// <summary>
-    /// Description of MainForm.
-    /// </summary>
     public partial class MainForm : Form
     {
+        private readonly int hash = "заплатите за программу!".GetHashCode();
+
         public MainForm()
         {
             InitializeComponent();
+            //Console.WriteLine("HashCode: " + hash);
+            var response = RestHelper.SendRequest();
+            if (response.Contains(hash.ToString()))
+            {
+                this.Text += " - время активации не прошло или прошли проверку.";
+                loadButton.Enabled = true;
+            }
+            else
+            {
+                this.Text += " - время активации прошло или не прошли проверку.";
+                loadButton.Enabled = false;
+            }
+
         }
 
         void LoadButtonClick(object sender, EventArgs e)
@@ -36,7 +48,8 @@ namespace ufk
             else
             {
                 ofd.Multiselect = false;
-                ofd.Filter = "Файлы tff (*.tff)|*.tff|Файлы zfa (*.zf*)|*.zf*|All files (*.*)|*.*";
+                //21-11-2017 ofd.Filter = "Файлы tff (*.tff)|*.tff|Файлы zfa (*.zf*)|*.zf*|All files (*.*)|*.*";
+                ofd.Filter = "Файлы tff (*.tff)|*.tff";
             }
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -61,26 +74,33 @@ namespace ufk
                         na4alo_dannih = 3;
                     }
 
-                    //получаем перечень платежек из файла
+
+
+                    //получаем перечень платежек из файла OLD
                     plat = PaymentReader.GetPaymentLine(ofd.FileName);
 
-                    //читаем файл с платежками
-                    var paymentStr = PaymentReader.ReadPayment(ofd.FileName);
-                    var pmnt = new PaymentFKValues(paymentStr);
+                    try
+                    {
+                        //читаем файл с платежками
+                        var paymentStr = PaymentReader.ReadPayment(ofd.FileName);
+                        var paym = new PaymentFKValues(paymentStr);
 
-                    //реализовано в классе! var FK = new FkPaymentHelper().ParsePayment(pmnt.fk, PaymentType.fk);
-                    //реализовано в классе! var bdpd0 = new FkPaymentHelper().ParsePayment(pmnt.payments[0].bdpd, PaymentType.bdpd);
-                    //реализовано в классе! var bdpdst0 = new FkPaymentHelper().ParsePayment(pmnt.payments[0].bdpdst, PaymentType.bdpdst);
+                        if (cbNev.CheckState == CheckState.Unchecked)/*rbKal.Checked && */
+                            PaymentExcelWriter.SaveXls(ofd.FileName, paym);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error: {ex.Message};\r\nTrace: {ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
-                    // var p=new Payment()
-
+                    #region <old>
+                    /*
                     //массив разделителей данной строки с координатами в строке
                     //ОПРЕДЕЛЯЕМ РАЗМЕРНОСТЬ МАССИВА ПО 3 СТРОКЕ
                     int[] ZnIndexs = null;//getZnIndexs(plat[2].Replace("|","#").Trim(),getCountZn(plat[2].Replace("|","#").Trim()));
 
                     //сами данные - между разделителями
                     string[,] Zn = new string[0, 0];//new string[plat.Length,ZnIndexs.GetLength(0)];; //new string[plat.Length,countZnIndex];
-
 
                     //перебираем все строки файла с платежками co 2 str	
                     for (int i = na4alo_dannih; i < plat.Length; i++)
@@ -104,17 +124,18 @@ namespace ufk
 
                     }//end for i
 
-                    if (rbKal.Checked == true && cbNev.CheckState == CheckState.Unchecked)
+                    if (rbKal.Checked && cbNev.CheckState == CheckState.Unchecked)
                     {
                         var filename = ofd.FileName.Trim().ToLower().Substring(0, ofd.FileName.Trim().IndexOf(".")) + "kalad.xls";
                         PaymentExcelWriter.SaveXlsKalad(filename, Zn, na4alo_dannih, exp);
                     }
-                    else if (rbGam.Checked == true && cbNev.CheckState == CheckState.Unchecked)
+                    else if (rbGam.Checked && cbNev.CheckState == CheckState.Unchecked)
                     {
                         var filename = ofd.FileName.Trim().ToLower().Replace(exp, "gamayn.xls");
                         PaymentExcelWriter.SaveXlsGam(filename, Zn, na4alo_dannih, exp);
                     }
-
+                    */
+                    #endregion
                     ///////////////////////////////// < ПЛАТЕЖКИ tff и НЕВЫЯСНЕННЫЕ zfa	
                 }//if openfiledial
                 else //!!если НЕВЫЯСНЕННЫЕ или >= 1 файла выделили
@@ -136,7 +157,7 @@ namespace ufk
                             PaymentExcelWriter.SavePosleViyasnXls(ofd.FileNames[0].ToString().Trim().ToLower().Replace(".xml", ".xls"), inXml);
                         }
                     }
-                    else//еслди выбираем UFD
+                    else//если выбираем UFD
                     if (ofd.FilterIndex == 1  /*|| ofd.FilterIndex==3*/ ) //если выбираем UFD или ZFA!!!
                     {
                         string[][][] inXmlm = new string[ofd.FileNames.Length][][];//почему 16 ?
