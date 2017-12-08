@@ -1,3 +1,5 @@
+// https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
