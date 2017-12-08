@@ -1,14 +1,24 @@
-// https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
-// выполн кода без delay - в FastLed -> EVERY_N_MILLISECONDS (200) {...выполнять код через кажд 200 сек}
-//возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
+using System;
 
+
+namespace _3kauto.Helpers
+{
     class Led
     {
 
-        private const int led_count = 150;//общее кол-во светодиодов в ленте
-        private const int led_segment_lenght = 25;//кол-во светодиодов в 1 отрезке - длина
-        private const int led_segment_count = 6;//led_count / led_segment_lenght;// 6;//кол-во отрезков
-        private static int[,] led_srip; //Массив индексов светодиодов c# int[,] led_srip = new int[4, 5]; c++ int led_srip[6][25];
+        // https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
+        // выполн кода без delay - в FastLed -> EVERY_N_MILLISECONDS (200) {...выполнять код через кажд 200 сек}
+        //возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
+
+
+        //LEDS_SATURATION — максимальная цветовая насыщенность
+        //LEDS_BRIGHTNESS — максимальная яркость(на 60 светодиодах примерное потребление получилось 800 мА при яркости 255, 400 мА при 128 и 200 мА при 64)
+        //hueStep — шаг изменения цвета за один цикл
+        //UPDATE_DELAY — скорость «бега» цвета по ленте
+        const int led_count = 150;//общее кол-во светодиодов в ленте
+        const int led_segment_lenght = 25;//кол-во светодиодов в 1 отрезке - длина
+        const int led_segment_count = 6;//led_count / led_segment_lenght;// 6;//кол-во отрезков
+        static int[,] led_srip; //Массив индексов светодиодов c# int[,] led_srip = new int[4, 5]; c++ int led_srip[6][25];
 
         public Led()
         {
@@ -20,10 +30,17 @@
             var col0 = GetLedCol(0);
             var col5 = GetLedCol(5);
             int[] diag0 = GetLedDiagonal(0);
+            int[] diag1 = GetLedDiagonal(1);
+            int[] diag4 = GetLedDiagonal(4);
 
-            WriteArray(diag0);
+            int[] diag4l = GetLedDiagonal(4, false);
 
-            WriteArray(led_srip);
+            WriteArray(diag0, "диагональ 0");
+            WriteArray(diag1, "диагональ 1");
+            WriteArray(diag4, "диагональ 4");
+            WriteArray(diag4l, "диагональ 4L");
+
+            WriteArray(led_srip,"strip");
             WriteArray(row0);
             WriteArray(row24);
 
@@ -31,42 +48,115 @@
             WriteArray(col5);
 
 
-            //LEDS_SATURATION — максимальная цветовая насыщенность
-            //LEDS_BRIGHTNESS — максимальная яркость(на 60 светодиодах примерное потребление получилось 800 мА при яркости 255, 400 мА при 128 и 200 мА при 64)
-            //hueStep — шаг изменения цвета за один цикл
-            //UPDATE_DELAY — скорость «бега» цвета по ленте
+
+        }
+
+        /// <summary>
+        /// установить цвет пикселя
+        /// </summary>
+        /// <param name="Pixel"></param>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        void setPixel(int Pixel, byte red, byte green, byte blue)
+        {
+        # ifdef ADAFRUIT_NEOPIXEL_H 
+            // NeoPixel
+            strip.setPixelColor(Pixel, strip.Color(red, green, blue));
+        #endif
+        # ifndef ADAFRUIT_NEOPIXEL_H 
+            // FastLED
+            leds[Pixel].r = red;
+            leds[Pixel].g = green;
+            leds[Pixel].b = blue;
+        #endif
+        }
+
+        /// <summary>
+        /// поставить по всей ленте 1 цвет
+        /// помогает при обнулении черным
+        /// </summary>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        void setAll(byte red, byte green, byte blue)
+        {
+            for (int i = 0; i < NUM_LEDS; i++)
+            {
+                setPixel(i, red, green, blue);
+            }
+            showStrip();
+        }
+
+        /// <summary>
+        /// поставить нужный цвет в массиве
+        /// </summary>
+        /// <param name="ledArr"></param>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        void setArrayLed(int[] ledArr, byte red, byte green, byte blue) {
+            for (int i = 0; i < sizeof(ledArr); i++) {
+                setPixel(i, red, green, blue);
+            }
+            showStrip();
+        }
+
+        /// <summary>
+        /// поставить нужный цвет в массиве с задержкой
+        /// </summary>
+        /// <param name="ledArr"></param>
+        /// <param name="red"></param>
+        /// <param name="green"></param>
+        /// <param name="blue"></param>
+        void setArrayLed(int[] ledArr, byte red, byte green, byte blue, uint8_t wait)
+        {
+            EVERY_N_MILLISECONDS(wait)
+            for (int i = 0; i < sizeof(ledArr); i++)
+            {
+                setPixel(i, red, green, blue);
+                //delay(wait);
+                showStrip();
+            }
         }
 
         /// <summary>
         /// диагональ
+        /// +добавить - прав/лев
         /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
+        /// <param name="r"></param>
+        /// <param name="right"></param>
         /// <returns></returns>
-        private int[] GetLedDiagonal(int r)
+        private int[] GetLedDiagonal(int r, bool right = true)
         {
             int[] led_ = new int[led_segment_lenght];
-            int r_ = 0;
+            int r_ = r;
             for (int w = 0; w < led_segment_lenght/*led_srip.GetLength(1)*/; w++)
             {
                 if (r_ >= led_segment_count)
                     r_ = 0;//обнуляем, если дошли до конца строки-на нов строку
+                if (r_ < 0)
+                    r_ = led_segment_count - 1;//обнуляем, если дошли до конца строки-на нов строку
 
-                //if (w == 0)
                 led_[w] = led_srip[r_, w];
 
-                // Console.Write($"{} ");
-
-                r_++;
+                if (right)
+                    r_++;
+                else
+                    r_--;
             }
             //Console.WriteLine();
 
             return led_;
         }
 
-        private void WriteArray(object o)
+        private void WriteArray(object o, string text = null, bool debug = false)
         {
-            Console.WriteLine(o.GetType());
+            if (!string.IsNullOrEmpty(text))
+                Console.WriteLine($"{text}: ");
+
+            if (debug)
+                Console.WriteLine(o.GetType());
             if (o.GetType() == typeof(int[]))
             {
                 foreach (int index in (int[])o)
@@ -77,7 +167,8 @@
             {
                 var arr = (int[,])o;
 
-                Console.WriteLine($"arr size: {arr.GetLength(0)};{arr.GetLength(1)}");
+                if (debug)
+                    Console.WriteLine($"arr size: {arr.GetLength(0)};{arr.GetLength(1)}");
 
                 if (arr.Rank == 2)//размерность=2 - двумерный
                     for (int h = 0; h < arr.GetLength(0); h++)
@@ -154,4 +245,4 @@
 
 
     }
-
+}
