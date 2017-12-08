@@ -1,12 +1,7 @@
 // https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
+// выполн кода без delay - в FastLed -> EVERY_N_MILLISECONDS (200) {...выполнять код через кажд 200 сек}
+//возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-{
     class Led
     {
 
@@ -159,4 +154,4 @@ using System.Threading.Tasks;
 
 
     }
-}
+
