@@ -6,6 +6,10 @@ namespace _3kauto.Helpers
     class Led
     {
 
+        // https://github.com/bruhautomation/ESP-MQTT-JSON-Digital-LEDs
+        // Recommended by Adafruit NeoPixel "Best Practices" to help protect LEDs from current onrush...
+        // https://github.com/jasoncoon/esp8266-fastled-webserver
+        // https://github.com/atuline/FastLED-Demos
         // https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
         // выполн кода без delay - в FastLed -> EVERY_N_MILLISECONDS (200) {...выполнять код через кажд 200 сек}
         //возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
