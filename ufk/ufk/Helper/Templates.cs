@@ -52,7 +52,7 @@ namespace ufk.Helper
                         Value = x.Value + "; " + bdpdst[x.Key]
                      }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                     if (intersectedItems.Count > 0)
+                     if (intersectedItems.Any())
                            throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
 
                     //может выдать ошибку "элемент с тем же ключом уже был добавлен"
