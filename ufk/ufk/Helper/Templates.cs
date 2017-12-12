@@ -22,8 +22,6 @@ namespace ufk.Helper
 
         public PaymentFKValues(string fileContent)
         {
-
-       
                 var fk_regex_pt = new Regex(@"FK\|.*\n");
                 var bd_regex_pt = new Regex(@"BD\|.*\n");
                 var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
@@ -46,6 +44,18 @@ namespace ufk.Helper
                 {
                     Dictionary<string, string> bdpd = paymentHelper.ParsePayment(key_val.bdpd, PaymentType.bdpd);
                     Dictionary<string, string> bdpdst = paymentHelper.ParsePayment(key_val.bdpdst, PaymentType.bdpdst);
+                 
+                    //ищем разные value с одинаковым ключом
+                    var intersectedItems = bdpd.Where(x => bdpdst.ContainsKey(x.Key) && !bdpdst.ContainsValue(x.Value)).Select(x => new
+                    {
+                        Key = x.Key,
+                        Value = x.Value + "; " + bdpdst[x.Key]
+                     }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                     if (intersectedItems.Count > 0)
+                           throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
+
+                    //может выдать ошибку "элемент с тем же ключом уже был добавлен"
                     Dictionary<string, string> paym_dic = bdpd.Union(bdpdst).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);//объединяем
 
                     PAUMENTS.Add(paym_dic);
