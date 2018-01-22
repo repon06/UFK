@@ -5,6 +5,7 @@ namespace _3kauto.Helpers
 {
     class Led
     {
+        // !!!!! https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/#colorpicker
         // !!! https://github.com/AdySan/ESP8266_WebSockets_NeoPixels/blob/master/ESP8266_WebSockets_NeoPixels.ino !!!
         // http://adityatannu.com/blog/post/2016/01/24/ESP8266-Websockets-demo-using-NeoPixels.html
        
