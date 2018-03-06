@@ -7,6 +7,7 @@ namespace ufk.Helper
     {
         public static string SendRequest(/*string url*/)
         {
+            //внести изменения: с сайта возвращать закодир текстовый шаблон 
             //"http://www.uniplast-kbe.ru/test/ufk.php?program=ufk&id=644521"
             try
             {
