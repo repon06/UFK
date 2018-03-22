@@ -6,9 +6,11 @@ namespace _3kauto.Helpers
     class Led
     {
         // !!!!! https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/#colorpicker
-        // !!! https://github.com/AdySan/ESP8266_WebSockets_NeoPixels/blob/master/ESP8266_WebSockets_NeoPixels.ino !!!
+        // !!!!! https://github.com/AdySan/ESP8266_WebSockets_NeoPixels/blob/master/ESP8266_WebSockets_NeoPixels.ino !!!
         // http://adityatannu.com/blog/post/2016/01/24/ESP8266-Websockets-demo-using-NeoPixels.html
        
+	    // эффекты
+	   
         // https://github.com/AdySan/ESPSocket
         
         // https://github.com/bruhautomation/ESP-MQTT-JSON-Digital-LEDs
@@ -17,7 +19,7 @@ namespace _3kauto.Helpers
         // https://github.com/atuline/FastLED-Demos
         // https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
         // выполн кода без delay - в FastLed -> EVERY_N_MILLISECONDS (200) {...выполнять код через кажд 200 сек}
-        //возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
+        // возможно надо возвращать не двумерный массив, а одномерный-с коорд нужных пикс
 
 
         //LEDS_SATURATION — максимальная цветовая насыщенность
@@ -55,9 +57,6 @@ namespace _3kauto.Helpers
 
             WriteArray(col0);
             WriteArray(col5);
-
-
-
         }
 
         /// <summary>
