@@ -19,6 +19,7 @@ namespace ufk
         {
             InitializeComponent();
             //Console.WriteLine("HashCode: " + hash);
+            /*
             var response = RestHelper.SendRequest();
             if (response.Contains(hash.ToString()))
             {
@@ -30,7 +31,8 @@ namespace ufk
                 this.Text += " - время активации прошло или не прошли проверку.";
                 loadButton.Enabled = false;
             }
-
+            */
+            loadButton.Enabled = true;
         }
 
         void LoadButtonClick(object sender, EventArgs e)
