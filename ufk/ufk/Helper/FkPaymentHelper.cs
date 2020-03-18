@@ -16,7 +16,7 @@ namespace ufk.Helper
     /// </summary>
     class PaymentHelper
     {
-        readonly string templatePath = $"{Directory.GetCurrentDirectory()}\\templateplat.txt";
+        readonly string templatePath = $"{Directory.GetCurrentDirectory()}\\docs\\templateplat.txt";
         //readonly string str_template;
         readonly PaymentFKTemplate templates;
         private readonly char[] spliter = { '|' };

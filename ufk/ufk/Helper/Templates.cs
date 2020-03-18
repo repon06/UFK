@@ -16,62 +16,64 @@ namespace ufk.Helper
         private List<Payment> payments { get; set; }
         //private Dictionary<string, string> PAUMENTS_DIC { set; get; }//в один дикт вносим/парсим bdpd и bdpdst
         public List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
-
-        public PaymentFKValues()
-        { }
+        public List<string> err = new List<string>();
 
         public PaymentFKValues(string fileContent)
         {
-                var fk_regex_pt = new Regex(@"FK\|.*\n");
-                var bd_regex_pt = new Regex(@"BD\|.*\n");
-                var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
+            
+            var fk_regex_pt = new Regex(@"FK\|.*\n");
+            var bd_regex_pt = new Regex(@"BD\|.*\n");
+            var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
 
-                var fk_match = fk_regex_pt.Match(fileContent);
-                var bd_match = bd_regex_pt.Match(fileContent);
-                var payment_matches = payments_regex_pt.Matches(fileContent);
+            var fk_match = fk_regex_pt.Match(fileContent);
+            var bd_match = bd_regex_pt.Match(fileContent);
+            var payment_matches = payments_regex_pt.Matches(fileContent);
 
-                fk = fk_match.Value;
-                bd = bd_match.Value;
-                var payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value).ToList();//выборка по 2 строки одного платежа
-                payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym)).ToList();
+            fk = fk_match.Value;
+            bd = bd_match.Value;
+            var payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value).ToList();//выборка по 2 строки одного платежа
+            payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym)).ToList();
 
-                var paymentHelper = new PaymentHelper();
+            var paymentHelper = new PaymentHelper();
 
-                FK = paymentHelper.ParsePayment(fk, PaymentType.fk);
-                BD = paymentHelper.ParsePayment(bd, PaymentType.bd);
+            FK = paymentHelper.ParsePayment(fk, PaymentType.fk);
+            BD = paymentHelper.ParsePayment(bd, PaymentType.bd);
 
-                foreach (Payment key_val in payments)
+            foreach (Payment key_val in payments)
+            {
+                string error = string.Empty;
+                Dictionary<string, string> bdpd = paymentHelper.ParsePayment(key_val.bdpd, PaymentType.bdpd);
+                Dictionary<string, string> bdpdst = paymentHelper.ParsePayment(key_val.bdpdst, PaymentType.bdpdst);
+
+                //ищем разные value с одинаковым ключом
+                var intersectedItems = bdpd.Where(x => bdpdst.ContainsKey(x.Key) && !bdpdst.ContainsValue(x.Value)).Select(x => new
                 {
-                    Dictionary<string, string> bdpd = paymentHelper.ParsePayment(key_val.bdpd, PaymentType.bdpd);
-                    Dictionary<string, string> bdpdst = paymentHelper.ParsePayment(key_val.bdpdst, PaymentType.bdpdst);
-                 
-                    //ищем разные value с одинаковым ключом
-                    var intersectedItems = bdpd.Where(x => bdpdst.ContainsKey(x.Key) && !bdpdst.ContainsValue(x.Value)).Select(x => new
-                    {
-                        Key = x.Key,
-                        Value = x.Value + "; " + bdpdst[x.Key]
-                     }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    Key = x.Key,
+                    Value = x.Value + "; " + bdpdst[x.Key]
+                }).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                     if (intersectedItems.Any())
-                           throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
-
-                    //может выдать ошибку "элемент с тем же ключом уже был добавлен"
-                    Dictionary<string, string> paym_dic = bdpd.Union(bdpdst).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);//объединяем
-
-                    PAUMENTS.Add(paym_dic);
+                if (intersectedItems.Any())
+                {
+                    error = $"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ";
+                    // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
+                }
+                if (bdpd["KBK"].Equals("0"))
+                {
+                    error = $"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет значения KBK: {bdpd["KBK"]}";
+                    // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет значения KBK: {bdpd["KBK"]}");
                 }
 
-
-                /* можно так
-                payment = new List<Payment>();
-
-                foreach (string paym in payment_)
-                    payment.Add(new Payment(paym));
-                */
-            
-
+                if (error == string.Empty)
+                {
+                    //может выдать ошибку "элемент с тем же ключом уже был добавлен"
+                    Dictionary<string, string> paym_dic = bdpd.Union(bdpdst).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);//объединяем
+                    Console.WriteLine(PAUMENTS.Count + " / " + paym_dic["KBK"]);
+                    PAUMENTS.Add(paym_dic);
+                }
+                else
+                    err.Add(error);
+            }
         }
-
 
     }
 

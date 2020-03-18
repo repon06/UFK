@@ -86,13 +86,18 @@ namespace ufk
                         //читаем файл с платежками
                         var paymentStr = PaymentReader.ReadPayment(ofd.FileName);
                         var paym = new PaymentFKValues(paymentStr);
+                        var errs = paym.err.Aggregate((i, j) => i + "\r\n\r\n" + j);
+                        MessageBox.Show($"{errs}. Данные записи не будут обработаны. Исправьте исходный файл.", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                        //foreach (string err in paym.err)
+                        //    Console.WriteLine(err);
 
                         if (cbNev.CheckState == CheckState.Unchecked)/*rbKal.Checked && */
                             PaymentExcelWriter.SaveXls(ofd.FileName, paym);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error: {ex.Message};\r\nTrace: {ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error: {ex.Message};\r\n\r\nTrace: {ex.StackTrace}", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     #region <old>
