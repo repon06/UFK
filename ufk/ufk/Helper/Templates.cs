@@ -22,7 +22,7 @@ namespace ufk.Helper
         /// добавили: Код вида дохода	KOD_ INCOME
         public PaymentFKValues(string fileContent)
         {
-            
+
             var fk_regex_pt = new Regex(@"FK\|.*\n");
             var bd_regex_pt = new Regex(@"BD\|.*\n");
             var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
@@ -56,8 +56,13 @@ namespace ufk.Helper
 
                 if (intersectedItems.Any())
                 {
-                    error = $"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ";
-                    // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
+                    var keys = intersectedItems.Keys.Aggregate((i, j) => i + ", " + j);
+
+                    if (keys.Equals("KBK") && !bdpd["KBK"].Equals(bdpdst["KBK"]))
+                        bdpd["KBK"] = bdpdst["KBK"];
+                    else
+                        error = $"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ";
+                        // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
                 }
                 if (bdpd["KBK"].Equals("0"))
                 {

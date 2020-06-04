@@ -86,9 +86,11 @@ namespace ufk
                         //читаем файл с платежками
                         var paymentStr = PaymentReader.ReadPayment(ofd.FileName);
                         var paym = new PaymentFKValues(paymentStr);
-                        var errs = paym.err.Aggregate((i, j) => i + "\r\n\r\n" + j);
-                        MessageBox.Show($"{errs}. Данные записи не будут обработаны. Исправьте исходный файл.", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
+                        if (paym.err.Count > 0)
+                        {
+                            var errs = paym.err.Aggregate((i, j) => i + "\r\n\r\n" + j);
+                            MessageBox.Show($"{errs}. Данные записи не будут обработаны. Исправьте исходный файл.", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
                         //foreach (string err in paym.err)
                         //    Console.WriteLine(err);
 
@@ -269,6 +271,7 @@ namespace ufk
                     MessageBox.Show("Ошибочка. Возможно, отменили \r\nили выделили больше 520 файлов!\r\n" + ofd.FileNames.Length + " ФАЙЛОВ", "!!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
         }
+
 
     }
 }

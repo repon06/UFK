@@ -97,7 +97,8 @@ namespace ufk
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "УФК->КУИ... (ver.1.5) 18.03.2020";
+            this.Text = "УФК->КУИ... (ver.1.7) 04.06.2020";
+            //this.Load += new System.EventHandler(this.MainForm_Load);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
