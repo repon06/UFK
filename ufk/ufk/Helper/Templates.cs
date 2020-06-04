@@ -18,6 +18,8 @@ namespace ufk.Helper
         public List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
         public List<string> err = new List<string>();
 
+        /// изменили кол-во параметров в шаблоне от 01.06.2020
+        /// добавили: Код вида дохода	KOD_ INCOME
         public PaymentFKValues(string fileContent)
         {
             

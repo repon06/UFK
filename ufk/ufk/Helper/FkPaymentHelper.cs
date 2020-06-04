@@ -83,6 +83,8 @@ namespace ufk.Helper
                     break;
             }
 
+            /// изменили кол-во параметров в шаблоне от 01.06.2020
+            /// добавили: Код вида дохода	KOD_ INCOME
             if (values.Length == template.Length)
             {
                 if (debug)
