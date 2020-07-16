@@ -631,10 +631,8 @@ namespace ufk.Helper
         /// <param name="Zn"></param>
         public static void SavePosleViyasnXls(string filename, string[,] Zn)
         {
-
             try
             {
-
                 FileStream stream = new FileStream(filename, FileMode.OpenOrCreate);
                 ExcelWriter writer = new ExcelWriter(stream);
                 writer.BeginWrite();
