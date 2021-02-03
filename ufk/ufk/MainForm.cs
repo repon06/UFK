@@ -8,34 +8,36 @@ using System.Windows.Forms;
 using System.IO;
 using Microsoft.Office.Interop.Excel;
 using ufk.Helper;
+using System.Configuration;
 
 namespace ufk
 {
     public partial class MainForm : Form
     {
         private readonly int hash = "заплатите за программу!".GetHashCode();
+        private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>();
 
         public MainForm()
         {
             InitializeComponent();
-            //Console.WriteLine("HashCode: " + hash);
-            /*
-            var response = RestHelper.SendRequest();
-            if (response.Contains(hash.ToString()))
-            {
-                this.Text += " - время активации не прошло или прошли проверку.";
-                loadButton.Enabled = true;
-            }
-            else
-            {
-                this.Text += " - время активации прошло или не прошли проверку.";
-                loadButton.Enabled = false;
-            }
-            */
             loadButton.Enabled = true;
+            if (DateTime.Now > DateTime.Parse("04.02.2021"))
+                button1.Enabled = false;
+            //ConfigurationSettings.AppSettings.Add("test_int", "123");
+            //string keyvalue = System.Configuration.ConfigurationManager.AppSettings["keyname"];
         }
 
         void LoadButtonClick(object sender, EventArgs e)
+        {
+            print_plat();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            print_plat(true);
+        }
+
+        private void print_plat(bool isNew = false)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = Directory.GetCurrentDirectory();
@@ -62,18 +64,18 @@ namespace ufk
                     string[] plat = null;
                     var exp = string.Empty; //расширение файла
                     var plat_str = string.Empty;
-                    var na4alo_dannih = 0; // с какой строки в ХМЛ-е начнутся норм данные-начинаем с этой строки читать файл
+                    //var na4alo_dannih = 0; // с какой строки в ХМЛ-е начнутся норм данные-начинаем с этой строки читать файл
 
 
                     if (ofd.FilterIndex == 1)
                     { //если ТФФ
                         exp = ".tff";
-                        na4alo_dannih = 2;
+                        //na4alo_dannih = 2;
                     }
                     else
                     { //если ЗФА
                         exp = ".zf*";
-                        na4alo_dannih = 3;
+                        //na4alo_dannih = 3;
                     }
 
 
@@ -83,68 +85,43 @@ namespace ufk
 
                     try
                     {
-                        //читаем файл с платежками
-                        var paymentStr = PaymentReader.ReadPayment(ofd.FileName);
-                        var paym = new PaymentFKValues(paymentStr);
-                        if (paym.err.Count > 0)
-                        {
-                            var errs = paym.err.Aggregate((i, j) => i + "\r\n\r\n" + j);
-                            MessageBox.Show($"{errs}. Данные записи не будут обработаны. Исправьте исходный файл.", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                        //foreach (string err in paym.err)
-                        //    Console.WriteLine(err);
+                        //читаем шаблон XSD
+                        string xsd_path = $"{Directory.GetCurrentDirectory()}\\docs\\formulars.xsd";
+                        //var xsd_template = new XmlSchemaReader().getListElement(xsd_path, "http://www.roskazna.ru/eb/domain/Inf_Pay_Doc/formular", "tBDPL, tBdPlSt");
+                        //List<string> tBDPL = xsd_template.Where(list => list.Key == "tBDPL").Select(value => value.Value).First();
+                        //List<string> tBdPlSt = xsd_template.Where(list => list.Key == "tBdPlSt").Select(value => value.Value).First();
 
-                        if (cbNev.CheckState == CheckState.Unchecked)/*rbKal.Checked && */
-                            PaymentExcelWriter.SaveXls(ofd.FileName, paym);
+                        Dictionary<string, string> fileContentRegex = new Dictionary<string, string>();
+                        fileContentRegex.Add("fk", @"FK\|.*\n");
+                        fileContentRegex.Add("bd", @"BD\|.*\n");
+                        fileContentRegex.Add("BDPL", @"(BDPL\|.*(\n|$))");
+                        fileContentRegex.Add("BDPLST", @"(BDPLST\|.*(\n|$))");
+
+                        //читаем файл с платежками
+                        string fileContent = PaymentReader.ReadPayment(ofd.FileName);
+                        //PaymentFKValues paym = new XmlSchemaReader().getPaymentFKValues(fileContent, xsd_template, fileContentRegex);
+                        // по старому или новому процессу
+                        if (isNew)
+                            PAUMENTS = new XmlSchemaReader().getPaymentFKValues(fileContent, xsd_path, "http://www.roskazna.ru/eb/domain/Inf_Pay_Doc/formular", fileContentRegex);
+                        else
+                        {
+                            PaymentFKValues paym = new PaymentFKValues(fileContent, fileContentRegex); //передаем строки из платежки - и парсим
+                            PAUMENTS = paym.getPAUMENTS();
+                            if (paym.err.Count > 0)
+                            {
+                                var errs = paym.err.Aggregate((i, j) => i + "\r\n\r\n" + j);
+                                MessageBox.Show($"{errs}. Данные записи не будут обработаны. Исправьте исходный файл.", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            }
+                        }
+
+                        if (cbNev.CheckState == CheckState.Unchecked)
+                            PaymentExcelWriter.SaveXls(ofd.FileName, PAUMENTS, isNew);
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show($"Error: {ex.Message};\r\n\r\nTrace: {ex.StackTrace}", "Error UFK", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    #region <old>
-                    /*
-                    //массив разделителей данной строки с координатами в строке
-                    //ОПРЕДЕЛЯЕМ РАЗМЕРНОСТЬ МАССИВА ПО 3 СТРОКЕ
-                    int[] ZnIndexs = null;//getZnIndexs(plat[2].Replace("|","#").Trim(),getCountZn(plat[2].Replace("|","#").Trim()));
-
-                    //сами данные - между разделителями
-                    string[,] Zn = new string[0, 0];//new string[plat.Length,ZnIndexs.GetLength(0)];; //new string[plat.Length,countZnIndex];
-
-                    //перебираем все строки файла с платежками co 2 str	
-                    for (int i = na4alo_dannih; i < plat.Length; i++)
-                    {
-                        plat_str = plat[i].Replace('|', splitter).Trim();//очищенная tekushaya строка
-
-                        int countZnIndex = StringHelper.GetCountSplitter(plat_str, splitter);//определяем кол-во разделителей
-
-                        //если размерность массива по горизонтали еще меньше, 
-                        //чем размерность текущей платежки, то исправляем
-                        //изменяем размерность массива
-                        if (Zn.GetLength(0) < plat.Length || Zn.GetLength(1) < countZnIndex)
-                            Array2.Resize(ref Zn, plat.Length, countZnIndex);
-
-                        ZnIndexs = StringHelper.GetZnIndexs(plat_str, countZnIndex);//массив расположения разделителей
-
-                        for (int q = 0; q + 1 < ZnIndexs.Length; q++)
-                            Zn[i, q] = plat_str.Substring(ZnIndexs[q] + 1, ZnIndexs[q + 1] - ZnIndexs[q] - 1).ToLower();
-
-                        ZnIndexs = null;
-
-                    }//end for i
-
-                    if (rbKal.Checked && cbNev.CheckState == CheckState.Unchecked)
-                    {
-                        var filename = ofd.FileName.Trim().ToLower().Substring(0, ofd.FileName.Trim().IndexOf(".")) + "kalad.xls";
-                        PaymentExcelWriter.SaveXlsKalad(filename, Zn, na4alo_dannih, exp);
-                    }
-                    else if (rbGam.Checked && cbNev.CheckState == CheckState.Unchecked)
-                    {
-                        var filename = ofd.FileName.Trim().ToLower().Replace(exp, "gamayn.xls");
-                        PaymentExcelWriter.SaveXlsGam(filename, Zn, na4alo_dannih, exp);
-                    }
-                    */
-                    #endregion
                     ///////////////////////////////// < ПЛАТЕЖКИ tff и НЕВЫЯСНЕННЫЕ zfa	
                 }//if openfiledial
                 else //!!если НЕВЫЯСНЕННЫЕ или >= 1 файла выделили

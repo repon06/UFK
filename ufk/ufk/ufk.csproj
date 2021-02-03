@@ -85,12 +85,14 @@
     <Compile Include="Helper\Excel.cs" />
     <Compile Include="Helper\ExcelWriter.cs" />
     <Compile Include="Helper\FkPaymentHelper.cs" />
+    <Compile Include="Helper\Payment.cs" />
     <Compile Include="Helper\PaymentExcelWriter.cs" />
     <Compile Include="Helper\PaymentReader.cs" />
     <Compile Include="Helper\ReArray.cs" />
     <Compile Include="Helper\RestHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\Templates.cs" />
+    <Compile Include="Helper\XmlSchemaReader.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +122,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="app.config" />
+    <None Include="docs\formulars.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="docs\ЭДВ_41556965_141117.TFF" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -40,6 +40,7 @@ namespace ufk
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbNev = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,9 +50,9 @@ namespace ufk
             this.loadButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loadButton.Location = new System.Drawing.Point(203, 12);
             this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(319, 89);
+            this.loadButton.Size = new System.Drawing.Size(319, 43);
             this.loadButton.TabIndex = 0;
-            this.loadButton.Text = "Загрузить";
+            this.loadButton.Text = "Загрузить (old)";
             this.loadButton.UseVisualStyleBackColor = true;
             this.loadButton.Click += new System.EventHandler(this.LoadButtonClick);
             // 
@@ -85,11 +86,23 @@ namespace ufk
             this.cbNev.Text = "невыясненные";
             this.cbNev.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(203, 67);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(319, 35);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Загрузить (new)";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(534, 114);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.loadButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -97,8 +110,7 @@ namespace ufk
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "УФК->КУИ... (ver.1.7) 04.06.2020";
-            //this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Text = "УФК->КУИ... (ver.1.8) 29.01.2021";
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -108,5 +120,6 @@ namespace ufk
 		private System.Windows.Forms.CheckBox cbNev;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button loadButton;
-	}
+        private System.Windows.Forms.Button button1;
+    }
 }

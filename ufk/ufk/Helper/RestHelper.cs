@@ -24,7 +24,7 @@ namespace ufk.Helper
                     return "Error: ошибка при проверке активации!";
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return "Error: ошибка при проверке активации!";
             }

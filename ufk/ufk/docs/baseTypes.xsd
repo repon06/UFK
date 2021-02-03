@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by TeaM DJiNN (TeaM DJiNN) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.roskazna.ru/eb/domain/common" xmlns:eb="http://www.roskazna.ru/eb/domain/appinfo" xmlns:self="http://www.roskazna.ru/eb/domain/common/base" targetNamespace="http://www.roskazna.ru/eb/domain/common/base">
+	<!--import namespace="http://www.roskazna.ru/eb/domain/common" schemaLocation="common.xsd"/>-->
+	<simpleType name="tDocDate">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Дата</eb:Label>
+				<eb:Definition>Дата</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="date"/>
+	</simpleType>
+	<simpleType name="tGUID">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>GUID</eb:Label>
+				<eb:Definition>GUID</eb:Definition>
+			</appinfo>
+			<documentation>VARCHAR2(36BYTE)</documentation>
+		</annotation>
+		<restriction base="string">
+			<length value="36"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen10Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="10"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen11Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="11"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen15Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max15Text</eb:Label>
+				<eb:Definition>Max15Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="15"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tAmnt">
+		<annotation>
+			<documentation>Сумма размрностью 20.2</documentation>
+		</annotation>
+		<restriction base="decimal">
+			<totalDigits value="20" fixed="true"/>
+			<fractionDigits value="2" fixed="true"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen1Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen20Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max20Text</eb:Label>
+				<eb:Definition>Max20Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="20"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen2Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="2"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen3Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max3Text</eb:Label>
+				<eb:Definition>Max3Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="3"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen34Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max34Text</eb:Label>
+				<eb:Definition>Max34Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="34"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen4Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max4Text</eb:Label>
+				<eb:Definition>Max4Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="4"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen8Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max8Text</eb:Label>
+				<eb:Definition>Max8Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="8"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tLen9Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max9Text</eb:Label>
+				<eb:Definition>Max9Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="9"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax100Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max100Text</eb:Label>
+				<eb:Definition>Max100Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="100" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax10Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="10" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax11Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max11Text</eb:Label>
+				<eb:Definition>Max11Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="11" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax12Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max12Text</eb:Label>
+				<eb:Definition>Max12Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="12" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax150Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max100Text</eb:Label>
+				<eb:Definition>Max100Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="150" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax15Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max15Text</eb:Label>
+				<eb:Definition>Max15Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="15" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax160Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max160Text</eb:Label>
+				<eb:Definition>Max160Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="160" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax16Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max100Text</eb:Label>
+				<eb:Definition>Max100Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="16" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax29Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max100Text</eb:Label>
+				<eb:Definition>Max100Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="29" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax2000Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max2000Text</eb:Label>
+				<eb:Definition>Max2000Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="2000" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax200Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max255Text</eb:Label>
+				<eb:Definition>Max255Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="200" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax20Text">
+		<restriction base="string">
+			<maxLength value="20"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax25Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max25Text</eb:Label>
+				<eb:Definition>Max25Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="25" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax24Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max24Text</eb:Label>
+				<eb:Definition>Max24Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="24" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax2Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max254Text</eb:Label>
+				<eb:Definition>Max254Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="2" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax3Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max3Text</eb:Label>
+				<eb:Definition>Max3Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="3" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax34Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max34Text</eb:Label>
+				<eb:Definition>Max34Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="34" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax40Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max4Text</eb:Label>
+				<eb:Definition>Max4Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="40" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax4Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max4Text</eb:Label>
+				<eb:Definition>Max4Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="4" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax50Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max50Text</eb:Label>
+				<eb:Definition>Max50Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="50" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax512Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max512Text</eb:Label>
+				<eb:Definition>Max512Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="512" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax5Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max5Text</eb:Label>
+				<eb:Definition>Max5Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="5" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax60Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max36Text</eb:Label>
+				<eb:Definition>Max36Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="60" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax6Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max5Text</eb:Label>
+				<eb:Definition>Max5Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="6" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax8Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max8Text</eb:Label>
+				<eb:Definition>Max8Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="8" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax9Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max9Text</eb:Label>
+				<eb:Definition>Max9Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="9" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tMax210Text">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max255Text</eb:Label>
+				<eb:Definition>Max255Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<maxLength value="210" fixed="true"/>
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tText1">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max1Text</eb:Label>
+				<eb:Definition>Max1Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tText2">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Max2Text</eb:Label>
+				<eb:Definition>Max2Text</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<length value="2"/>
+		</restriction>
+	</simpleType>
+</schema>

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by TeaM DJiNN (TeaM DJiNN) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:base="http://www.roskazna.ru/eb/domain/common/base" xmlns:cm="http://www.roskazna.ru/eb/domain/common" xmlns:eb="http://www.roskazna.ru/eb/domain/appinfo" xmlns:self="http://www.roskazna.ru/eb/domain/common/applied" targetNamespace="http://www.roskazna.ru/eb/domain/common/applied">
+	<import namespace="http://www.roskazna.ru/eb/domain/common/base" schemaLocation="baseTypes.xsd"/>
+	<import namespace="http://www.roskazna.ru/eb/domain/common" schemaLocation="common.xsd"/>
+	<simpleType name="tSecrLevel">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Метка конфиденциальности</eb:Label>
+				<eb:Definition>Метка конфиденциальности</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd1">
+			<enumeration value="0"/>
+			<enumeration value="1"/>
+			<enumeration value="2"/>
+			<enumeration value="3"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tCdDoc">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Секретность</eb:Label>
+				<eb:Definition>Секретность</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd2">
+			<enumeration value="VT"/>
+			<enumeration value="VP"/>
+			<enumeration value="VC"/>
+			<enumeration value="VA"/>
+			<enumeration value="VB"/>
+			<enumeration value="VN"/>
+			<enumeration value="VI"/>
+			<enumeration value="VJ"/>
+			<enumeration value="VH"/>
+			<enumeration value="VK"/>
+			<enumeration value="VQ"/>
+			<enumeration value="IP"/>
+			<enumeration value="IV"/>
+			<enumeration value="RD"/>
+			<enumeration value="SB"/>
+			<enumeration value="TP"/>
+			<enumeration value="VU"/>
+			<enumeration value="WN"/>
+			<enumeration value="АТ"/>
+		</restriction>
+	</simpleType>
+		<simpleType name="tTypeKBK">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Секретность</eb:Label>
+				<eb:Definition>Секретность</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd2">
+			<enumeration value="10"/>
+			<enumeration value="20"/>
+			<enumeration value="31"/>
+			<enumeration value="32"/>
+		</restriction>
+	</simpleType>
+		<simpleType name="tDirSum">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Секретность</eb:Label>
+				<eb:Definition>Секретность</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd1">
+			<enumeration value="0"/>
+			<enumeration value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tVidOtch">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Секретность</eb:Label>
+				<eb:Definition>Секретность</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd1">
+			<enumeration value="1"/>
+			<enumeration value="0"/>
+		</restriction>
+	</simpleType>
+		<simpleType name="tVidPay">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Секретность</eb:Label>
+				<eb:Definition>Секретность</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="self:tCd1">
+			<enumeration value="0"/>
+			<enumeration value="1"/>
+			<enumeration value="2"/>
+			<enumeration value="4"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tCd1">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование100</eb:Label>
+				<eb:Definition>Наименование100</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen1Text"/>
+	</simpleType>
+	<simpleType name="tCd10">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование10</eb:Label>
+				<eb:Definition>Наименование10</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen10Text"/>
+	</simpleType>
+	<simpleType name="tCd11">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование11</eb:Label>
+				<eb:Definition>Наименование11</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen11Text"/>
+	</simpleType>
+	<simpleType name="tCd2">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование100</eb:Label>
+				<eb:Definition>Наименование100</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen2Text"/>
+	</simpleType>
+	<simpleType name="tCd20">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код по БК</eb:Label>
+				<eb:Definition>Код по БК</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen20Text"/>
+	</simpleType>
+	<simpleType name="tCd3">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код3</eb:Label>
+				<eb:Definition>Код3</eb:Definition>
+			</appinfo>
+			<documentation>Код реквизита формуляра.</documentation>
+		</annotation>
+		<restriction base="base:tLen3Text"/>
+	</simpleType>
+	<simpleType name="tCd4">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код4</eb:Label>
+				<eb:Definition>Код4</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen4Text"/>
+	</simpleType>
+	<simpleType name="tCd8">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код8</eb:Label>
+				<eb:Definition>Код8</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen8Text"/>
+	</simpleType>
+	<simpleType name="tCd9">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код8</eb:Label>
+				<eb:Definition>Код8</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen9Text"/>
+	</simpleType>
+	<simpleType name="tDctDt">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Дата</eb:Label>
+				<eb:Definition>Дата</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tDocDate"/>
+	</simpleType>
+	<simpleType name="tGUID1">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Глобальный уникальный идентификатор1</eb:Label>
+				<eb:Definition>Глобальный уникальный идентификатор1</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tGUID"/>
+	</simpleType>
+	<simpleType name="tINN10">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>ИНН12</eb:Label>
+				<eb:Definition>ИНН12</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen10Text"/>
+	</simpleType>
+	<simpleType name="tINN1-12">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>ИНН12</eb:Label>
+				<eb:Definition>ИНН12</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax12Text">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tJustAmnt">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Сумма просто</eb:Label>
+				<eb:Definition>Сумма просто</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tAmnt"/>
+	</simpleType>
+	<simpleType name="tKBK1-20">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код по БК</eb:Label>
+				<eb:Definition>Код по БК</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax20Text">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tKBK20">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Код по БК</eb:Label>
+				<eb:Definition>Код по БК</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen20Text"/>
+	</simpleType>
+	<simpleType name="tKPP1-9">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>КПП</eb:Label>
+				<eb:Definition>КПП</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax9Text">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tKPP9">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>КПП</eb:Label>
+				<eb:Definition>КПП</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tLen9Text"/>
+	</simpleType>
+	<simpleType name="tNm10">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование100</eb:Label>
+				<eb:Definition>Наименование100</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax10Text"/>
+	</simpleType>
+	<simpleType name="tNm100">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование100</eb:Label>
+				<eb:Definition>Наименование100</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax100Text"/>
+	</simpleType>
+	<simpleType name="tNm11">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование100</eb:Label>
+				<eb:Definition>Наименование100</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax11Text"/>
+	</simpleType>
+	<simpleType name="tNm15">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование15_1</eb:Label>
+				<eb:Definition>Наименование15</eb:Definition>
+			</appinfo>
+			<documentation>Наименование реквизита формуляра.</documentation>
+		</annotation>
+		<restriction base="base:tMax15Text">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tNm16">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование255</eb:Label>
+				<eb:Definition>Наименование255</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax16Text"/>
+	</simpleType>
+	<simpleType name="tNm160">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование255</eb:Label>
+				<eb:Definition>Наименование255</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax160Text"/>
+	</simpleType>
+	<simpleType name="tNm150">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование255</eb:Label>
+				<eb:Definition>Наименование255</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax150Text"/>
+	</simpleType>
+	<simpleType name="tNm29">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование255</eb:Label>
+				<eb:Definition>Наименование255</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax29Text"/>
+	</simpleType>
+	<simpleType name="tNm2">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax2Text"/>
+	</simpleType>
+	<simpleType name="tNm20">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax20Text"/>
+	</simpleType>
+	<simpleType name="tNm2000">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование1000</eb:Label>
+				<eb:Definition>Наименование1000</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax2000Text"/>
+	</simpleType>
+	<simpleType name="tNm25">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование25</eb:Label>
+				<eb:Definition>Наименование25</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax25Text"/>
+	</simpleType>
+	<simpleType name="tNm24">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование24</eb:Label>
+				<eb:Definition>Наименование24</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax24Text"/>
+	</simpleType>
+	<simpleType name="tNm3">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование3</eb:Label>
+				<eb:Definition>Наименование3</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax3Text">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tNm34">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование34</eb:Label>
+				<eb:Definition>Наименование34</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax34Text"/>
+	</simpleType>
+	<simpleType name="tNm4">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование30</eb:Label>
+				<eb:Definition>Наименование30</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax4Text"/>
+	</simpleType>
+	<simpleType name="tNm40">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование30</eb:Label>
+				<eb:Definition>Наименование30</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax40Text"/>
+	</simpleType>
+	<simpleType name="tNm5">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax5Text"/>
+	</simpleType>
+	<simpleType name="tNm50">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax50Text"/>
+	</simpleType>
+	<simpleType name="tNm512">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование300</eb:Label>
+				<eb:Definition>Наименование300</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax512Text"/>
+	</simpleType>
+	<simpleType name="tNm6">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax6Text"/>
+	</simpleType>
+	<simpleType name="tNm210">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование255</eb:Label>
+				<eb:Definition>Наименование255</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax210Text"/>
+	</simpleType>
+	<simpleType name="tNm8">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax8Text"/>
+	</simpleType>
+	<simpleType name="tNm9">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Наименование50</eb:Label>
+				<eb:Definition>Наименование50</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tMax9Text"/>
+	</simpleType>
+	<simpleType name="tTpDoc">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Тип сведений</eb:Label>
+				<eb:Definition>Тип сведений</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tText1">
+			<enumeration value="0"/>
+			<enumeration value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tTpKBK">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Тип КБК</eb:Label>
+				<eb:Definition>Тип КБК</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tText2">
+			<enumeration value="10"/>
+			<enumeration value="31"/>
+			<enumeration value="32"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tTpProt">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Тип сведений</eb:Label>
+				<eb:Definition>Тип сведений</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="base:tText1">
+			<enumeration value="0"/>
+			<enumeration value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="tUUID">
+		<annotation>
+			<appinfo source="http://www.roskazna.ru/eb/domain/appinfo">
+				<eb:Label>Глобальный уникальный идентификатор</eb:Label>
+				<eb:Definition>Глобальный уникальный идентификатор</eb:Definition>
+			</appinfo>
+		</annotation>
+		<restriction base="cm:tGuid"/>
+	</simpleType>
+</schema>

@@ -13,6 +13,9 @@ namespace ufk.Helper
     /// http://moufk.roskazna.ru/gis/trebovaniy-k-formatam/
     /// Требования к форматам файлов, используемых при информационном взаимодействии
     /// 17 августа 2017
+    /// 
+    /// Новый шаблон - XSD-схема от 16.12.2020
+    /// https://moufk.roskazna.gov.ru/gis/trebovaniy-k-formatam/
     /// </summary>
     class PaymentHelper
     {
@@ -24,10 +27,7 @@ namespace ufk.Helper
 
         public PaymentHelper()
         {
-            /*str_template = ReadTemplate(templatePath);*/
             templates = ReadTemplates(templatePath);
-
-
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ufk.Helper
         /// <returns></returns>
         private string ReadTemplate(string path)
         {
-            var file = System.IO.File.OpenText(path);
+            var file = File.OpenText(path);
             return file.ReadToEnd();
         }
 
@@ -49,7 +49,7 @@ namespace ufk.Helper
         private PaymentFKTemplate ReadTemplates(string path)
         {
             string[] stringSeparators = new string[] { "\r\n" };
-            var reader = System.IO.File.OpenText(path);
+            var reader = File.OpenText(path);
             var text = reader.ReadToEnd();
             string[] lines = text.Split(stringSeparators, StringSplitOptions.None);
 

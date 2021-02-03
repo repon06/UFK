@@ -4,38 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ufk.Helper
 {
     class PaymentFKValues
     {
-        private string fk { get; set; }
+        //private string fk { get; set; }
         public Dictionary<string, string> FK { set; get; }
-        private string bd { get; set; }
+        //private string bd { get; set; }
         public Dictionary<string, string> BD { set; get; }
-        private List<Payment> payments { get; set; }
+        //private List<Payment> payments { get; set; }
         //private Dictionary<string, string> PAUMENTS_DIC { set; get; }//в один дикт вносим/парсим bdpd и bdpdst
-        public List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+        private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
         public List<string> err = new List<string>();
+        private readonly char[] spliter = { '|' };
+
+
+
 
         /// изменили кол-во параметров в шаблоне от 01.06.2020
         /// добавили: Код вида дохода	KOD_ INCOME
-        public PaymentFKValues(string fileContent)
+        /// Новый шаблон - XSD-схема от 16.12.2020
+        /// https://moufk.roskazna.gov.ru/gis/trebovaniy-k-formatam/
+        public PaymentFKValues(string fileContent, Dictionary<string, string> fileContentRegex)
         {
+            var fk_match = new Regex(fileContentRegex["fk"]).Match(fileContent);
+            var bd_match = new Regex(fileContentRegex["bd"]).Match(fileContent);//сколько платежей в платежке на какую общ сумму (BD||..|||0|4|61976.39|)
+            var payment_matches = new Regex(fileContentRegex["BDPL"] + fileContentRegex["BDPLST"]).Matches(fileContent); // тут ноль из ЭДВ_64725530_230121.TFF
 
-            var fk_regex_pt = new Regex(@"FK\|.*\n");
-            var bd_regex_pt = new Regex(@"BD\|.*\n");
-            var payments_regex_pt = new Regex(@"(BDPD\|.*(\n|$))(BDPDST\|.*(\n|$))");
+            if (payment_matches.Count == 0)
+                Console.WriteLine("Изменился формат/требования к форматам текстовых файлов УФК\r\nhttps://moufk.roskazna.gov.ru/gis/trebovaniy-k-formatam/");
 
-            var fk_match = fk_regex_pt.Match(fileContent);
-            var bd_match = bd_regex_pt.Match(fileContent);
-            var payment_matches = payments_regex_pt.Matches(fileContent);
+            string fk = fk_match.Value;
+            string bd = bd_match.Value;
+            List<string> payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value.Replace("\r\n", string.Empty).Trim()).ToList();//выборка по 2 строки одного платежа // тут ноль из ЭДВ_64725530_230121.TFF
+            //List<Payment> payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym, bdpd_regex_pt, bdpdst_regex_pt)).ToList(); // тут ноль из ЭДВ_64725530_230121.TFF
+            //List<string> payments_new_bdpd = payment_pd_pdst.Cast<string>().Select(paym => Payment.getPayment(paym, bdpd_regex_pt)).ToList();
+            //List<string> payments_new_bdpdst = payment_pd_pdst.Cast<string>().Select(paym => Payment.getPayment(paym, bdpdst_regex_pt)).ToList();
+            List<Payment> payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym, new Regex(fileContentRegex["BDPL"]), new Regex(fileContentRegex["BDPLST"]))).ToList(); // тут ноль из ЭДВ_64725530_230121.TFF
+            List<string> payments_new_bdpd = payment_pd_pdst.Cast<string>().Select(paym => Payment.getPayment(paym, new Regex(fileContentRegex["BDPL"]))).ToList();
+            List<string> payments_new_bdpdst = payment_pd_pdst.Cast<string>().Select(paym => Payment.getPayment(paym, new Regex(fileContentRegex["BDPLST"]))).ToList();
 
-            fk = fk_match.Value;
-            bd = bd_match.Value;
-            var payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value).ToList();//выборка по 2 строки одного платежа
-            payments = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym)).ToList();
-
+            //чтение шаблона templateplat.txt
             var paymentHelper = new PaymentHelper();
 
             FK = paymentHelper.ParsePayment(fk, PaymentType.fk);
@@ -62,7 +73,7 @@ namespace ufk.Helper
                         bdpd["KBK"] = bdpdst["KBK"];
                     else
                         error = $"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ";
-                        // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
+                    // throw new Exception($"В реестре платежка: bdpd|{bdpd["NOM_EL_MES"]} имеет различные значения [{intersectedItems.Keys.Aggregate((i, j) => i + ", " + j) }] : [{intersectedItems.Values.Aggregate((i, j) => i + ", " + j)}] ");
                 }
                 if (bdpd["KBK"].Equals("0"))
                 {
@@ -82,28 +93,14 @@ namespace ufk.Helper
             }
         }
 
-    }
-
-    /// <summary>
-    /// последовательные записи 1 платежки
-    /// </summary>
-    class Payment
-    {
-        public Payment(string paymentContent)
+        public List<Dictionary<string, string>> getPAUMENTS()
         {
-            var bdpd_regex_pt = new Regex(@"(BDPD\|.*(\n|$))");
-            var bdpdst_regex_pt = new Regex(@"(BDPDST\|.*(\n|$))");
-
-            var bdpd_match = bdpd_regex_pt.Match(paymentContent);
-            var bdpdst_match = bdpdst_regex_pt.Match(paymentContent);
-
-            bdpd = bdpd_match.Value;
-            bdpdst = bdpdst_match.Value;
+            return PAUMENTS;
         }
 
-        public string bdpd { get; set; }
-        public string bdpdst { get; set; }
     }
+
+
 
     /// <summary>
     /// для выбора типа парамента платежа

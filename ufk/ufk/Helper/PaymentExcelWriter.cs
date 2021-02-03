@@ -11,7 +11,7 @@ namespace ufk.Helper
     class PaymentExcelWriter
     {
 
-        public static void SaveXls(string filename, PaymentFKValues PAUMENTS)
+        public static void SaveXls(string filename, List<Dictionary<string, string>> PAUMENTS, bool isNew = false)
         {
             var filenameArenda = $"{Path.GetDirectoryName(filename)}\\{Path.GetFileNameWithoutExtension(filename)}_arenda.xls";// filename.Trim().ToLower().Substring(0, filename.IndexOf(".")) + "kalad.xls";
             var filenameBuhg = $"{Path.GetDirectoryName(filename)}\\{Path.GetFileNameWithoutExtension(filename)}_buhg.xls";// filename.Trim().ToLower().Substring(0, filename.IndexOf(".")) + "gamayn.xls";
@@ -83,8 +83,8 @@ namespace ufk.Helper
                 int i_ar = ii;
                 int i_bu = ii;
 
-                // for (int i = na4alo_dannih; i < Zn.GetLength(0); i++)
-                foreach (var paym in PAUMENTS.PAUMENTS)
+                Console.WriteLine("PAUMENTS.PAUMENTS.Count: " + PAUMENTS.Count);
+                foreach (var paym in PAUMENTS)
                 {
                     if (StringHelper.kbk_arenda.Contains(paym["KBK"])) // содержит кбк отдела аренды (Калядин)
                     {
@@ -92,43 +92,86 @@ namespace ufk.Helper
                         i_ar++;
                         try
                         {
-                            writerAr.WriteCell(i_ar, 00, paym["NUM_PP"]);
-                            writerAr.WriteCell(i_ar, 01, paym["DATE_PP"]);
-                            writerAr.WriteCell(i_ar, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
-                            writerAr.WriteCell(i_ar, 03, paym["INN_PAY"]);
-                            writerAr.WriteCell(i_ar, 04, paym["KPP_PAY"]);
-                            writerAr.WriteCell(i_ar, 05, paym["INN_RCP"]);
-                            writerAr.WriteCell(i_ar, 06, paym["KPP_RCP"]);
-                            writerAr.WriteCell(i_ar, 07, paym["KBK"]);
-                            writerAr.WriteCell(i_ar, 08, paym["VID_PL"]);
-                            writerAr.WriteCell(i_ar, 09, paym["DATE_PP_IN"]);
-                            writerAr.WriteCell(i_ar, 10, paym["DATE_PP_SPS"]);
-                            writerAr.WriteCell(i_ar, 11, paym["VID_OPER"]);
-                            writerAr.WriteCell(i_ar, 12, paym["CNAME_PAY"]);
-                            writerAr.WriteCell(i_ar, 13, paym["BS_PAY"]);
-                            writerAr.WriteCell(i_ar, 14, paym["BIC_PAY"]);
-                            writerAr.WriteCell(i_ar, 15, paym["NAME_BIC_PAY"]);
-                            writerAr.WriteCell(i_ar, 16, paym["BS_KS_PAY"]);
-                            writerAr.WriteCell(i_ar, 17, paym["СNAME_UBP_RCP"]);
-                            writerAr.WriteCell(i_ar, 18, paym["BS_RCP"]);
-                            writerAr.WriteCell(i_ar, 19, paym["BIC_RCP"]);
-                            writerAr.WriteCell(i_ar, 20, paym["NAME_BIC_RCP"]);
-                            writerAr.WriteCell(i_ar, 21, paym["BS_KS_RCP"]);
-                            writerAr.WriteCell(i_ar, 22, paym["ORDER_PAY"]);
-                            writerAr.WriteCell(i_ar, 23, paym["PAYSTATUS"]);
-                            writerAr.WriteCell(i_ar, 24, paym["PURPOSE"]);
-                            writerAr.WriteCell(i_ar, 25, paym["OSNPLAT"]);
-                            writerAr.WriteCell(i_ar, 26, paym["OKATO"]);
-                            writerAr.WriteCell(i_ar, 27, paym["NAL_PER"]);
-                            writerAr.WriteCell(i_ar, 28, paym["NUM_DOK"]);
-                            writerAr.WriteCell(i_ar, 29, paym["DATE_DOK"]);
-                            writerAr.WriteCell(i_ar, 30, paym["TYPE_PL"]);
-                            writerAr.WriteCell(i_ar, 31, paym["NOM_PL_PO"]);
-                            writerAr.WriteCell(i_ar, 32, paym["NOM_RD_PO"]);
-                            writerAr.WriteCell(i_ar, 33, paym["DATE_RD_PO"]);
-                            writerAr.WriteCell(i_ar, 34, paym["OPER_PO"]);
-                            writerAr.WriteCell(i_ar, 35, paym["GUID"]);
-                            writerAr.WriteCell(i_ar, 35, paym["DATE_PAY"]);
+                            if (isNew)
+                            {
+                                writerAr.WriteCell(i_ar, 00, paym["nom_order"]);
+                                writerAr.WriteCell(i_ar, 01, paym["date_otch"]);
+                                writerAr.WriteCell(i_ar, 02, Convert.ToDouble(paym["sum_v"].Replace(".", ",")));
+                                writerAr.WriteCell(i_ar, 03, paym["inn_gz"]);
+                                writerAr.WriteCell(i_ar, 04, paym["kpp_gz"]);
+                                writerAr.WriteCell(i_ar, 05, paym["inn_ps"]);
+                                writerAr.WriteCell(i_ar, 06, paym["kpp_ps"]);
+                                writerAr.WriteCell(i_ar, 07, paym["kbk"]);
+                                writerAr.WriteCell(i_ar, 08, paym["kod_v"]);//VID_PL
+                                writerAr.WriteCell(i_ar, 09, paym["date_otch"]);//DATE_PP_IN
+                                writerAr.WriteCell(i_ar, 10, paym["date_isp"]);//DATE_PP_SPS
+                                writerAr.WriteCell(i_ar, 11, paym["kod_v"]);//VID_OPER
+                                writerAr.WriteCell(i_ar, 12, paym["purpose"]);//CNAME_PAY
+                                writerAr.WriteCell(i_ar, 13, paym["bs_pay"]);//BS_PAY
+                                writerAr.WriteCell(i_ar, 14, paym["bic_org"]);//BIC_PAY
+                                writerAr.WriteCell(i_ar, 15, paym["nom_sa"]);//NAME_BIC_PAY
+                                writerAr.WriteCell(i_ar, 16, paym["bs_ks_pay"]);//BS_KS_PAY
+                                writerAr.WriteCell(i_ar, 17, paym["bic_sa"]);//СNAME_UBP_RCP
+                                writerAr.WriteCell(i_ar, 18, paym["bs_name_pay"]);//BS_RCP
+                                writerAr.WriteCell(i_ar, 19, paym["bic_org"]);//BIC_RCP
+                                writerAr.WriteCell(i_ar, 20, paym["name_ps"]);//NAME_BIC_RCP
+                                writerAr.WriteCell(i_ar, 21, paym["bs_ks_pay"]);//BS_KS_RCP
+                                writerAr.WriteCell(i_ar, 22, paym["nom_dok"]);//ORDER_PAY
+                                writerAr.WriteCell(i_ar, 23, paym["paystatus"]);
+                                writerAr.WriteCell(i_ar, 24, paym["purpose"]);//PURPOSE
+                                writerAr.WriteCell(i_ar, 25, paym["osn_pl"]);
+                                writerAr.WriteCell(i_ar, 26, paym["kod_oktmo"]);
+                                writerAr.WriteCell(i_ar, 27, paym["nal_per"]);
+                                writerAr.WriteCell(i_ar, 28, paym["nom_dok"]);
+                                writerAr.WriteCell(i_ar, 29, paym["date_otch"]);
+                                writerAr.WriteCell(i_ar, 30, paym["kod_v"]);//TYPE_PL
+                                writerAr.WriteCell(i_ar, 31, paym["name_order"]);//NOM_PL_PO
+                                writerAr.WriteCell(i_ar, 32, paym["nom_org"]);//NOM_PL_PO NOM_RD_PO
+                                writerAr.WriteCell(i_ar, 33, paym["date_otch"]);//DATE_RD_PO
+                                writerAr.WriteCell(i_ar, 34, paym["kod_v"]);//OPER_PO
+                                writerAr.WriteCell(i_ar, 35, paym["guid"]);//GUID
+                                writerAr.WriteCell(i_ar, 35, paym["date_otch"]);//DATE_PAY
+                            }
+                            else
+                            {
+                                writerAr.WriteCell(i_ar, 00, paym["NUM_PP"]);
+                                writerAr.WriteCell(i_ar, 01, paym["DATE_PP"]);
+                                writerAr.WriteCell(i_ar, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
+                                writerAr.WriteCell(i_ar, 03, paym["INN_PAY"]);
+                                writerAr.WriteCell(i_ar, 04, paym["KPP_PAY"]);
+                                writerAr.WriteCell(i_ar, 05, paym["INN_RCP"]);
+                                writerAr.WriteCell(i_ar, 06, paym["KPP_RCP"]);
+                                writerAr.WriteCell(i_ar, 07, paym["KBK"]);
+                                writerAr.WriteCell(i_ar, 08, paym["VID_PL"]);
+                                writerAr.WriteCell(i_ar, 09, paym["DATE_PP_IN"]);
+                                writerAr.WriteCell(i_ar, 10, paym["DATE_PP_SPS"]);
+                                writerAr.WriteCell(i_ar, 11, paym["VID_OPER"]);
+                                writerAr.WriteCell(i_ar, 12, paym["CNAME_PAY"]);
+                                writerAr.WriteCell(i_ar, 13, paym["BS_PAY"]);
+                                writerAr.WriteCell(i_ar, 14, paym["BIC_PAY"]);
+                                writerAr.WriteCell(i_ar, 15, paym["NAME_BIC_PAY"]);
+                                writerAr.WriteCell(i_ar, 16, paym["BS_KS_PAY"]);
+                                writerAr.WriteCell(i_ar, 17, paym["СNAME_UBP_RCP"]);
+                                writerAr.WriteCell(i_ar, 18, paym["BS_RCP"]);
+                                writerAr.WriteCell(i_ar, 19, paym["BIC_RCP"]);
+                                writerAr.WriteCell(i_ar, 20, paym["NAME_BIC_RCP"]);
+                                writerAr.WriteCell(i_ar, 21, paym["BS_KS_RCP"]);
+                                writerAr.WriteCell(i_ar, 22, paym["ORDER_PAY"]);
+                                writerAr.WriteCell(i_ar, 23, paym["PAYSTATUS"]);
+                                writerAr.WriteCell(i_ar, 24, paym["PURPOSE"]);
+                                writerAr.WriteCell(i_ar, 25, paym["OSNPLAT"]);
+                                writerAr.WriteCell(i_ar, 26, paym["OKATO"]);
+                                writerAr.WriteCell(i_ar, 27, paym["NAL_PER"]);
+                                writerAr.WriteCell(i_ar, 28, paym["NUM_DOK"]);
+                                writerAr.WriteCell(i_ar, 29, paym["DATE_DOK"]);
+                                writerAr.WriteCell(i_ar, 30, paym["TYPE_PL"]);
+                                writerAr.WriteCell(i_ar, 31, paym["NOM_PL_PO"]);
+                                writerAr.WriteCell(i_ar, 32, paym["NOM_RD_PO"]);
+                                writerAr.WriteCell(i_ar, 33, paym["DATE_RD_PO"]);
+                                writerAr.WriteCell(i_ar, 34, paym["OPER_PO"]);
+                                writerAr.WriteCell(i_ar, 35, paym["GUID"]);
+                                writerAr.WriteCell(i_ar, 35, paym["DATE_PAY"]);
+                            }
                         }
                         catch (Exception exc)
                         {
@@ -141,18 +184,36 @@ namespace ufk.Helper
                         i_bu++;
                         try
                         {
-                            writerBu.WriteCell(i_bu, 00, paym["NUM_PP"]);
-                            writerBu.WriteCell(i_bu, 01, paym["DATE_PP"]);
-                            writerBu.WriteCell(i_bu, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
-                            writerBu.WriteCell(i_bu, 03, paym["INN_PAY"]);
-                            writerBu.WriteCell(i_bu, 04, paym["KPP_PAY"]);
-                            writerBu.WriteCell(i_bu, 05, paym["INN_RCP"]);
-                            writerBu.WriteCell(i_bu, 06, paym["KPP_RCP"]);
-                            writerBu.WriteCell(i_bu, 07, paym["DATE_PP_SPS"]);
-                            writerBu.WriteCell(i_bu, 08, paym["CNAME_PAY"]);
-                            writerBu.WriteCell(i_bu, 09, paym["PURPOSE"]);
-                            writerBu.WriteCell(i_bu, 10, paym["KBK"]);
-                            writerBu.WriteCell(i_bu, 11, paym["DATE_PAY"]);
+                            if (isNew)
+                            {
+                                writerBu.WriteCell(i_bu, 00, paym["nom_order"]);//NUM_PP
+                                writerBu.WriteCell(i_bu, 01, paym["date_otch"]);//DATE_PP
+                                writerBu.WriteCell(i_bu, 02, Convert.ToDouble(paym["sum_v"].Replace(".", ",")));//SUM_PP
+                                writerBu.WriteCell(i_bu, 03, paym["inn_gz"]);//INN_PAY
+                                writerBu.WriteCell(i_bu, 04, paym["kpp_gz"]);//KPP_PAY
+                                writerBu.WriteCell(i_bu, 05, paym["inn_ps"]);//INN_RCP
+                                writerBu.WriteCell(i_bu, 06, paym["kpp_ps"]);//KPP_RCP
+                                writerBu.WriteCell(i_bu, 07, paym["date_isp"]);//DATE_PP_SPS
+                                writerBu.WriteCell(i_bu, 08, paym["purpose"]);//CNAME_PAY
+                                writerBu.WriteCell(i_bu, 09, paym["purpose"]);//PURPOSE
+                                writerBu.WriteCell(i_bu, 10, paym["kbk"]);
+                                writerBu.WriteCell(i_bu, 11, paym["date_isp"]);//DATE_PAY
+                            }
+                            else
+                            {
+                                writerBu.WriteCell(i_bu, 00, paym["NUM_PP"]);
+                                writerBu.WriteCell(i_bu, 01, paym["DATE_PP"]);
+                                writerBu.WriteCell(i_bu, 02, Convert.ToDouble(paym["SUM_PP"].Replace(".", ",")));
+                                writerBu.WriteCell(i_bu, 03, paym["INN_PAY"]);
+                                writerBu.WriteCell(i_bu, 04, paym["KPP_PAY"]);
+                                writerBu.WriteCell(i_bu, 05, paym["INN_RCP"]);
+                                writerBu.WriteCell(i_bu, 06, paym["KPP_RCP"]);
+                                writerBu.WriteCell(i_bu, 07, paym["DATE_PP_SPS"]);
+                                writerBu.WriteCell(i_bu, 08, paym["CNAME_PAY"]);
+                                writerBu.WriteCell(i_bu, 09, paym["PURPOSE"]);
+                                writerBu.WriteCell(i_bu, 10, paym["KBK"]);
+                                writerBu.WriteCell(i_bu, 11, paym["DATE_PAY"]);
+                            }
                         }
                         catch (Exception exc)
                         {
@@ -179,7 +240,7 @@ namespace ufk.Helper
                 xlstmp.SaveDocument(filenameBuhg);
                 xlstmp.CloseDocument();
 
-                MessageBox.Show($"Записей в файле: {PAUMENTS.PAUMENTS.Count}\r\n" + i_ar + " сконвертированы по КБК аренды\r\n" + i_bu + " сконвертированы по иным КБК", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Записей в файле: {PAUMENTS.Count}\r\n" + i_ar + " сконвертированы по КБК аренды\r\n" + i_bu + " сконвертированы по иным КБК", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception strStream)
             {
