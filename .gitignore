@@ -4,3 +4,5 @@ packages/
 .vs/
 
 *.tmp
+
+test/
