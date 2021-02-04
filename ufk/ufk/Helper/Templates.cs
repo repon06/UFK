@@ -10,13 +10,10 @@ namespace ufk.Helper
 {
     class PaymentFKValues
     {
-        //private string fk { get; set; }
         public Dictionary<string, string> FK { set; get; }
-        //private string bd { get; set; }
         public Dictionary<string, string> BD { set; get; }
-        //private List<Payment> payments { get; set; }
-        //private Dictionary<string, string> PAUMENTS_DIC { set; get; }//в один дикт вносим/парсим bdpd и bdpdst
-        private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+        //private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+        private Dictionary<string, List<Dictionary<string, string>>> PAUMENTS = new Dictionary<string, List<Dictionary<string, string>>>();
         public List<string> err = new List<string>();
         private readonly char[] spliter = { '|' };
 
@@ -27,8 +24,14 @@ namespace ufk.Helper
         /// добавили: Код вида дохода	KOD_ INCOME
         /// Новый шаблон - XSD-схема от 16.12.2020
         /// https://moufk.roskazna.gov.ru/gis/trebovaniy-k-formatam/
-        public PaymentFKValues(string fileContent, Dictionary<string, string> fileContentRegex)
+        public PaymentFKValues(string fileContent)
         {
+            Dictionary<string, string> fileContentRegex = new Dictionary<string, string>();
+            fileContentRegex.Add("fk", @"FK\|.*\n");
+            fileContentRegex.Add("bd", @"BD\|.*\n");
+            fileContentRegex.Add("BDPL", @"(BDPL\|.*(\n|$))");
+            fileContentRegex.Add("BDPLST", @"(BDPLST\|.*(\n|$))");
+
             var fk_match = new Regex(fileContentRegex["fk"]).Match(fileContent);
             var bd_match = new Regex(fileContentRegex["bd"]).Match(fileContent);//сколько платежей в платежке на какую общ сумму (BD||..|||0|4|61976.39|)
             var payment_matches = new Regex(fileContentRegex["BDPL"] + fileContentRegex["BDPLST"]).Matches(fileContent); // тут ноль из ЭДВ_64725530_230121.TFF
@@ -86,14 +89,18 @@ namespace ufk.Helper
                     //может выдать ошибку "элемент с тем же ключом уже был добавлен"
                     Dictionary<string, string> paym_dic = bdpd.Union(bdpdst).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);//объединяем
                     Console.WriteLine(PAUMENTS.Count + " / " + paym_dic["KBK"]);
-                    PAUMENTS.Add(paym_dic);
+                    //PAUMENTS.Add(paym_dic);
+                    if (!PAUMENTS.Keys.Contains("old"))
+                        PAUMENTS.Add("old", new List<Dictionary<string, string>>() { paym_dic });
+                    else
+                        PAUMENTS["old"].Add(paym_dic);
                 }
                 else
                     err.Add(error);
             }
         }
 
-        public List<Dictionary<string, string>> getPAUMENTS()
+        public Dictionary<string, List<Dictionary<string, string>>> getPAUMENTS()
         {
             return PAUMENTS;
         }

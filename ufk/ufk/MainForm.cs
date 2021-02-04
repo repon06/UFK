@@ -15,13 +15,13 @@ namespace ufk
     public partial class MainForm : Form
     {
         private readonly int hash = "заплатите за программу!".GetHashCode();
-        private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>();
-
+        //private List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>();
+        private Dictionary<string, List<Dictionary<string, string>>> PAUMENTS = new Dictionary<string, List<Dictionary<string, string>>>();
         public MainForm()
         {
             InitializeComponent();
             loadButton.Enabled = true;
-            if (DateTime.Now > DateTime.Parse("04.02.2021"))
+            if (DateTime.Now > DateTime.Parse("05.02.2021"))
                 button1.Enabled = false;
             //ConfigurationSettings.AppSettings.Add("test_int", "123");
             //string keyvalue = System.Configuration.ConfigurationManager.AppSettings["keyname"];
@@ -46,7 +46,7 @@ namespace ufk
             //если невыясненные
             if (cbNev.CheckState == CheckState.Checked)
             {
-                ofd.Multiselect = true;//мультивыделение вкл
+                ofd.Multiselect = true;
                 ofd.Filter = "Файлы .uf* (*.ufd;*.ufo;*.ufe;*.uff;*.uf*)|*.ufd;*.ufo;*.ufe;*.uff;*.uf*| Файлы xml (*.xml) | *.xml";
             }
             else
@@ -87,25 +87,16 @@ namespace ufk
                     {
                         //читаем шаблон XSD
                         string xsd_path = $"{Directory.GetCurrentDirectory()}\\docs\\formulars.xsd";
-                        //var xsd_template = new XmlSchemaReader().getListElement(xsd_path, "http://www.roskazna.ru/eb/domain/Inf_Pay_Doc/formular", "tBDPL, tBdPlSt");
-                        //List<string> tBDPL = xsd_template.Where(list => list.Key == "tBDPL").Select(value => value.Value).First();
-                        //List<string> tBdPlSt = xsd_template.Where(list => list.Key == "tBdPlSt").Select(value => value.Value).First();
-
-                        Dictionary<string, string> fileContentRegex = new Dictionary<string, string>();
-                        fileContentRegex.Add("fk", @"FK\|.*\n");
-                        fileContentRegex.Add("bd", @"BD\|.*\n");
-                        fileContentRegex.Add("BDPL", @"(BDPL\|.*(\n|$))");
-                        fileContentRegex.Add("BDPLST", @"(BDPLST\|.*(\n|$))");
 
                         //читаем файл с платежками
                         string fileContent = PaymentReader.ReadPayment(ofd.FileName);
-                        //PaymentFKValues paym = new XmlSchemaReader().getPaymentFKValues(fileContent, xsd_template, fileContentRegex);
+
                         // по старому или новому процессу
                         if (isNew)
-                            PAUMENTS = new XmlSchemaReader().getPaymentFKValues(fileContent, xsd_path, "http://www.roskazna.ru/eb/domain/Inf_Pay_Doc/formular", fileContentRegex);
+                            PAUMENTS = new XmlSchemaReader().getPaymentFKValues(fileContent, xsd_path, "http://www.roskazna.ru/eb/domain/Inf_Pay_Doc/formular");
                         else
                         {
-                            PaymentFKValues paym = new PaymentFKValues(fileContent, fileContentRegex); //передаем строки из платежки - и парсим
+                            PaymentFKValues paym = new PaymentFKValues(fileContent); //передаем строки из платежки - и парсим
                             PAUMENTS = paym.getPAUMENTS();
                             if (paym.err.Count > 0)
                             {
@@ -115,7 +106,7 @@ namespace ufk
                         }
 
                         if (cbNev.CheckState == CheckState.Unchecked)
-                            PaymentExcelWriter.SaveXls(ofd.FileName, PAUMENTS, isNew);
+                            PaymentExcelWriter.SaveXls(ofd.FileName, PAUMENTS);
                     }
                     catch (Exception ex)
                     {

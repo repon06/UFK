@@ -46,7 +46,7 @@ namespace ufk.Helper
                 customerSchema = schema;
             }
 
-            // перебираю наименования шаблонов BDPLST, BDPL
+            // перебираю наименования шаблонов BDPLST, BDPL, BDPD, BDPDST
             foreach (string complexTypeName in listComplexTypeNames)
                 foreach (object item in customerSchema.Items)
                 {
@@ -58,12 +58,12 @@ namespace ufk.Helper
                     }
                     else if (complexType != null)
                     {
-
-                        if (complexType.Name == complexTypeName)
+                        //в платежке-BDPD в xsd-tBdPd
+                        if (complexType.Name.ToUpper() == complexTypeName.ToUpper())
                         {
                             Console.Out.WriteLine("Complex Type: {0}", complexType.Name);
 
-                            listComplexType.Add(complexType.Name, OutputElements(complexType.Particle));
+                            listComplexType.Add(complexType.Name/*.ToUpper()*/, OutputElements(complexType.Particle));
                             if (complexType.AttributeUses.Count > 0)
                             {
                                 IDictionaryEnumerator enumerator = complexType.AttributeUses.GetEnumerator();
@@ -82,9 +82,9 @@ namespace ufk.Helper
             return listComplexType;
         }
 
-        private List<String> OutputElements(XmlSchemaParticle particle)
+        private List<string> OutputElements(XmlSchemaParticle particle)
         {
-            List<String> outList = new List<string>();
+            List<string> outList = new List<string>();
             XmlSchemaSequence sequence = particle as XmlSchemaSequence;
             XmlSchemaChoice choice = particle as XmlSchemaChoice;
             XmlSchemaAll all = particle as XmlSchemaAll;
@@ -161,23 +161,30 @@ namespace ufk.Helper
         }
 
 
-        public List<Dictionary<string, string>> getPaymentFKValues(string fileContent, string filePath, string target_namesapce, Dictionary<string, string> fileContentRegex)
+        //public List<Dictionary<string, string>> getPaymentFKValues(string fileContent, string filePath, string target_namesapce)
+        public Dictionary<string, List<Dictionary<string, string>>> getPaymentFKValues(string fileContent, string filePath, string target_namesapce)
         {
+            Dictionary<string, string> fileContentRegex = new Dictionary<string, string>();
+            fileContentRegex.Add("fk", @"FK\|.*\n");
+            fileContentRegex.Add("bd", @"BD\|.*\n");
+            fileContentRegex.Add("BDPL", @"(BDP.\|.*(\n|$))");
+            fileContentRegex.Add("BDPLST", @"(BDP.ST\|.*(\n|$))");
+
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-            List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+            //List<Dictionary<string, string>> PAUMENTS = new List<Dictionary<string, string>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
+
+            Dictionary<string, List<Dictionary<string, string>>> PAUMENTS = new Dictionary<string, List<Dictionary<string, string>>>(); //{ set; get; }//генерим список из распарс ДИКШН PAUMENTS_DIC
             Dictionary<string, List<string>> tmpl_xsd = new Dictionary<string, List<string>>(comparer);
 
-
-            var fk_match = new Regex(fileContentRegex["fk"]).Match(fileContent);
-            var bd_match = new Regex(fileContentRegex["bd"]).Match(fileContent);//сколько платежей в платежке на какую общ сумму (BD||..|||0|4|61976.39|)
-            //var payment_matches_all = new Regex(fileContentRegex["BDPL"] + fileContentRegex["BDPLST"]).Matches(fileContent);
             var payment_matches = new Regex(fileContentRegex["BDPL"]).Matches(fileContent);
 
             if (payment_matches.Count == 0)
                 Console.WriteLine("Изменился формат/требования к форматам текстовых файлов УФК\r\nhttps://moufk.roskazna.gov.ru/gis/trebovaniy-k-formatam/");
 
-            string fk = fk_match.Value;
-            string bd = bd_match.Value;
+            //var fk_match = new Regex(fileContentRegex["fk"]).Match(fileContent);
+            //var bd_match = new Regex(fileContentRegex["bd"]).Match(fileContent);//сколько платежей в платежке на какую общ сумму (BD||..|||0|4|61976.39|)
+            //string fk = fk_match.Value;
+            //string bd = bd_match.Value;
             List<string> payment_pd_pdst = payment_matches.Cast<Match>().Select(match => match.Value.Replace("\r\n", string.Empty).Trim()).ToList();//выборка по 2 строки одного платежа // тут ноль из ЭДВ_64725530_230121.TFF
 
             //List<Payment> payments_all = payment_pd_pdst.Cast<string>().Select(paym => new Payment(paym, new Regex(fileContentRegex["BDPL"]), new Regex(fileContentRegex["BDPLST"]))).ToList(); // тут ноль из ЭДВ_64725530_230121.TFF
@@ -196,18 +203,23 @@ namespace ufk.Helper
                 if (!tmpl_xsd.Keys.Contains(templateFieldName))
                 {
                     var xsd_template = getListElement(filePath, target_namesapce, templateFieldName);
-                    List<string> tBDPL = xsd_template.Where(list => list.Key == templateFieldName).Select(value => value.Value).First();
+                    if (xsd_template.Count == 0)
+                        throw new Exception($"Возможно в шаблоне на нашли описание для эл-та :{templateFieldName}; Проверить регистр");
+                    List<string> tBDPL = xsd_template.Where(list => list.Key.ToUpper() == templateFieldName.ToUpper()).Select(value => value.Value).First();
                     tmpl_xsd.Add(templateFieldName, tBDPL);
                 }
 
-                Console.WriteLine($"платежка {templateFieldName}, Items: " + listValuesPayment.Count);
-                Console.WriteLine($"шаблон {templateFieldName}, Items: " + tmpl_xsd[templateFieldName].Count);
+                Console.WriteLine($"платежка {templateFieldName}, Items: {listValuesPayment.Count}; шаблон { templateFieldName}, Items: {tmpl_xsd[templateFieldName].Count}");
 
                 //объединяем список значений и ключей из шабл
                 Dictionary<string, string> paym_dic = tmpl_xsd[templateFieldName].Zip(listValuesPayment, (k, v) => new { k, v })
                                                         .ToDictionary(x => x.k, x => x.v, comparer);
+                //PAUMENTS.Add(paym_dic);
 
-                PAUMENTS.Add(paym_dic);
+                if (!PAUMENTS.Keys.Contains(templateFieldName))
+                    PAUMENTS.Add(templateFieldName, new List<Dictionary<string, string>>() { paym_dic });
+                else
+                    PAUMENTS[templateFieldName].Add(paym_dic);
             }
 
             return PAUMENTS;
