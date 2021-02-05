@@ -111,7 +111,7 @@ namespace ufk.Helper
                                     writerAr.WriteCell(i_ar, 09, paym["date_otch"]);//DATE_PP_IN
                                     writerAr.WriteCell(i_ar, 10, paym["date_isp"]);//DATE_PP_SPS
                                     writerAr.WriteCell(i_ar, 11, paym["kod_v"]);//VID_OPER
-                                    writerAr.WriteCell(i_ar, 12, paym["purpose"]);//CNAME_PAY
+                                    writerAr.WriteCell(i_ar, 12, paym["bs_name_pay"]);//CNAME_PAY -purpose- Плательщик
                                     writerAr.WriteCell(i_ar, 13, paym["bs_pay"]);//BS_PAY
                                     writerAr.WriteCell(i_ar, 14, paym["bic_org"]);//BIC_PAY
                                     writerAr.WriteCell(i_ar, 15, paym["nom_sa"]);//NAME_BIC_PAY
@@ -200,7 +200,7 @@ namespace ufk.Helper
                                     writerBu.WriteCell(i_bu, 05, paym["inn_ps"]);//INN_RCP
                                     writerBu.WriteCell(i_bu, 06, paym["kpp_ps"]);//KPP_RCP
                                     writerBu.WriteCell(i_bu, 07, paym["date_isp"]);//DATE_PP_SPS
-                                    writerBu.WriteCell(i_bu, 08, paym["purpose"]);//CNAME_PAY
+                                    writerBu.WriteCell(i_bu, 08, paym["bs_name_pay"]);//CNAME_PAY -purpose- плательщик
                                     writerBu.WriteCell(i_bu, 09, paym["purpose"]);//PURPOSE
                                     writerBu.WriteCell(i_bu, 10, paym["kbk"]);
                                     writerBu.WriteCell(i_bu, 11, paym["date_isp"]);//DATE_PAY
