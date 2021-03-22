@@ -21,7 +21,7 @@ namespace ufk
         {
             InitializeComponent();
             loadButton.Enabled = true;
-            if (DateTime.Now > DateTime.Parse("06.02.2021"))
+            if (DateTime.Now > DateTime.Parse("30.03.2021"))
                 button1.Enabled = false;
             //ConfigurationSettings.AppSettings.Add("test_int", "123");
             //string keyvalue = System.Configuration.ConfigurationManager.AppSettings["keyname"];

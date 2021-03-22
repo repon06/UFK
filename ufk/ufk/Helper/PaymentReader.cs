@@ -24,12 +24,15 @@ namespace ufk.Helper
         public static string[] GetPaymentLine(string FileName)
         //public string[] getPlatUfk(System.IO.StreamReader file)	
         {
+            int max_lines = 10000;
             // Read the file and display it line by line.
             System.IO.StreamReader file = new System.IO.StreamReader(FileName, Encoding.GetEncoding(1251));
 
             /*OpenFileDialog ofd=new OpenFileDialog();*/
-            string[] line = new string[2000];
+            string[] line = new string[max_lines];
             int counter = 0;
+            if (counter > max_lines)
+                throw new Exception("Кол-во платежек превышает " + max_lines);
 
             while ((line[counter] = file.ReadLine()) != null) //.Replace("|","#")
             {
